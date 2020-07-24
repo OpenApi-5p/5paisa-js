@@ -8,5 +8,9 @@
     "parserOptions": {
         "ecmaVersion": 11
     },
-    "rules": {}
+    "rules": {},
+    "ignorePatterns": [
+        "test/**",
+        "*.json"
+    ]
 }
