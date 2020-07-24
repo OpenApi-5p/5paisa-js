@@ -28,6 +28,9 @@ function FivePaisaClient(conf) {
   const ORDER_BOOK_REQUEST_CODE = `5POrdBkV2`;
   const HOLDINGS_REQUEST_CODE = `5PHoldingV2`;
   const POSITIONS_REQUEST_CODE = `5PNPNWV1`;
+  const TRADE_INFO_REQUEST_CODE = `5PTrdInfo`;
+  const ORDER_STATUS_REQUEST_CODE = `5POrdStatus`;
+  const ORDER_PLACEMENT_REQUEST_CODE = `5POrdReq`;
   const LOGIN_REQUEST_CODE = `5PLoginV2`;
   var CLIENT_CODE = null;
   this.loginPayload = loginPayload;
@@ -83,6 +86,96 @@ function FivePaisaClient(conf) {
           console.log(RED, response.data.body.Message);
         } else {
           console.log(GREEN, response.data.body.Data);
+        }
+      });
+  };
+
+  this.order_book = function() {
+    this.genericPayload.head.requestCode = ORDER_BOOK_REQUEST_CODE;
+    this.genericPayload.body.ClientCode = CLIENT_CODE;
+    request_instance
+      .post(ORDER_BOOK_ROUTE, this.genericPayload)
+      .then(response => {
+        if (response.data.body.OrderBookDetail.length === 0) {
+          console.log(RED, response.data.body.Message);
+        } else {
+          console.log(GREEN, response.data.body.OrderBookDetail);
+        }
+      });
+  };
+
+  this.margin = function() {
+    this.genericPayload.head.requestCode = MARGIN_REQUEST_CODE;
+    this.genericPayload.body.ClientCode = CLIENT_CODE;
+    request_instance.post(MARGIN_ROUTE, this.genericPayload).then(response => {
+      if (response.data.body.EquityMargin.length === 0) {
+        console.log(RED, response.data.body.Message);
+      } else {
+        console.log(GREEN, response.data.body.EquityMargin);
+      }
+    });
+  };
+
+  this.positions = function() {
+    this.genericPayload.head.requestCode = POSITIONS_REQUEST_CODE;
+    this.genericPayload.body.ClientCode = CLIENT_CODE;
+    request_instance
+      .post(POSITIONS_ROUTE, this.genericPayload)
+      .then(response => {
+        if (response.data.body.NetPositionDetail.length === 0) {
+          console.log(RED, response.data.body.Message);
+        } else {
+          console.log(GREEN, response.data.body.NetPositionDetail);
+        }
+      });
+  };
+
+  /*
+  Expects a order:ist
+  [{
+        "Exch": "N",
+        "ExchType": "C",
+        "ScripCode": 11536,
+        "RemoteOrderID": "5712977609111312242"
+      }
+  ]
+  */
+
+  this.order_status = function(orderList) {
+    this.genericPayload.head.requestCode = ORDER_STATUS_REQUEST_CODE;
+    this.genericPayload.body.ClientCode = CLIENT_CODE;
+    this.genericPayload.body.OrdStatusReqList = orderList;
+    request_instance
+      .post(ORDER_STATUS_ROUTE, this.genericPayload)
+      .then(response => {
+        if (response.data.body.OrdStatusResLst.length === 0) {
+          console.log(RED, "No info found");
+        } else {
+          console.log(GREEN, response.data.body.OrdStatusReqList);
+        }
+      });
+  };
+  /*
+  Expects a tradeDetailList
+  [{
+        "Exch": "N",
+        "ExchType": "C",
+        "ScripCode": 11536,
+        "RemoteOrderID": "5712977609111312242"
+      }
+  ]
+  */
+  this.trade_info = function(tradeDetailList) {
+    this.genericPayload.head.requestCode = TRADE_INFO_REQUEST_CODE;
+    this.genericPayload.body.ClientCode = CLIENT_CODE;
+    this.genericPayload.body.TradeDetailList = tradeDetailList;
+    request_instance
+      .post(TRADE_INFO_ROUTE, this.genericPayload)
+      .then(response => {
+        if (response.data.body.TradeDetail.length === 0) {
+          console.log(RED, "No info found");
+        } else {
+          console.log(GREEN, response.data.body.TradeDetail);
         }
       });
   };
