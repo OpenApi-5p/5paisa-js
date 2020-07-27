@@ -1,3 +1,8 @@
+const date = new Date();
+const today = date.getTime();
+date.setDate(date.getDate() + 1);
+const followingDay = date.getTime();
+
 const GENERIC_PAYLOAD = {
   head: {
     appName: "",
@@ -38,7 +43,48 @@ const LOGIN_PAYLOAD = {
   }
 };
 
+const ORDER_PLACEMENT_PAYLOAD = {
+  head: {
+    appName: "",
+    appVer: "1.0",
+    key: "",
+    osName: "WEB",
+    requestCode: "",
+    userId: "",
+    password: ""
+  },
+  body: {
+    ClientCode: "1234567",
+    OrderFor: "P",
+    Exchange: "B",
+    ExchangeType: "C",
+    Price: 0.0,
+    OrderID: 0,
+    OrderType: "BUY",
+    Qty: 0,
+    OrderDateTime: `/Date(${today})/`,
+    ScripCode: 11809,
+    AtMarket: true,
+    RemoteOrderID: "1",
+    ExchOrderID: 0,
+    DisQty: 0,
+    IsStopLossOrder: false,
+    StopLossPrice: 0,
+    IsVTD: false,
+    IOCOrder: false,
+    IsIntraday: false,
+    PublicIP: "192.168.1.1",
+    AHPlaced: "N",
+    ValidTillDate: `/Date(${followingDay})/`,
+    iOrderValidity: 0,
+    TradedQty: 0,
+    OrderRequesterCode: "",
+    AppSource: 0
+  }
+};
+
 module.exports = {
   genericPayload: GENERIC_PAYLOAD,
-  loginPayload: LOGIN_PAYLOAD
+  loginPayload: LOGIN_PAYLOAD,
+  orderPayload: ORDER_PLACEMENT_PAYLOAD
 };

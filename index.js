@@ -2,7 +2,7 @@
 const axios = require("axios");
 const axiosCookieJarSupport = require("axios-cookiejar-support").default;
 const tough = require("tough-cookie");
-const { genericPayload, loginPayload } = require("./const");
+const { genericPayload, loginPayload, orderPayload } = require("./const");
 const { encrypt } = require("./utils");
 
 axiosCookieJarSupport(axios);
@@ -43,6 +43,12 @@ function FivePaisaClient(conf) {
   this.genericPayload.head.key = conf.userKey;
   this.genericPayload.head.userId = conf.userId;
   this.genericPayload.head.password = conf.password;
+  this.orderPayload = orderPayload;
+  this.orderPayload.head.appName = conf.appName;
+  this.orderPayload.head.key = conf.userKey;
+  this.orderPayload.head.userId = conf.userId;
+  this.orderPayload.head.password = conf.password;
+  this.orderPayload.body.AppSource = conf.appSource;
 
   const request_instance = axios.create({
     baseURL: BASE_URL,
@@ -128,6 +134,64 @@ function FivePaisaClient(conf) {
           console.log(GREEN, response.data.body.NetPositionDetail);
         }
       });
+  };
+
+  this._order_request = function(orderType) {
+    this.orderPayload.body.OrderFor = orderType;
+    this.orderPayload.head.requestCode = ORDER_PLACEMENT_REQUEST_CODE;
+    this.orderPayload.body.ClientCode = CLIENT_CODE;
+    this.orderPayload.body.OrderRequesterCode = CLIENT_CODE;
+    console.log(this.orderPayload);
+    request_instance
+      .post(ORDER_PLACEMENT_ROUTE, this.orderPayload)
+      .then(response => {
+        console.log(GREEN, response.data.body);
+      });
+  };
+
+  this.place_order = function(
+    orderType,
+    scripCode,
+    qty,
+    exchange,
+    exchangeSegment,
+    atMarket,
+    isStopLossOrder,
+    stopLossPrice,
+    isVTD,
+    isIOCOrder,
+    isIntraday,
+    ahPlaced
+  ) {
+    this.orderPayload.body.Exchange = exchange || "B";
+    this.orderPayload.body.ExchangeType = exchangeSegment || "C";
+    this.orderPayload.body.OrderType = orderType;
+    this.orderPayload.body.Qty = qty;
+    this.orderPayload.body.ScripCode = scripCode;
+    this.orderPayload.body.AtMarket = atMarket || true;
+    this.orderPayload.body.DisQty = qty;
+    this.orderPayload.body.IsStopLossOrder = isStopLossOrder || false;
+    this.orderPayload.body.StopLossPrice = stopLossPrice || 0;
+    this.orderPayload.body.IsVTD = isVTD || false;
+    this.orderPayload.body.IOCOrder = isIOCOrder || false;
+    this.orderPayload.body.IsIntraday = isIntraday || false;
+    this.orderPayload.body.AHPlaced = ahPlaced || "N";
+    this.orderPayload.body.TradedQty = 0;
+    this._order_request("P");
+  };
+
+  this.modify_order = function(exchangeOrderID, tradedQty, scripCode) {
+    this.orderPayload.body.ExchOrderID = exchangeOrderID;
+    this.orderPayload.body.TradedQty = tradedQty;
+    this.orderPayload.body.ScripCode = scripCode;
+    this._order_request("M");
+  };
+
+  this.cancel_order = function(exchangeOrderID, tradedQty, scripCode) {
+    this.orderPayload.body.ExchOrderID = exchangeOrderID;
+    this.orderPayload.body.TradedQty = tradedQty;
+    this.orderPayload.body.ScripCode = scripCode;
+    this._order_request("C");
   };
 
   /*
