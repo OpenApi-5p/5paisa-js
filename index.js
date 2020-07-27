@@ -82,7 +82,7 @@ function FivePaisaClient(conf) {
     return req;
   };
 
-  this.holdings = function() {
+  this.getHoldings = function() {
     this.genericPayload.head.requestCode = HOLDINGS_REQUEST_CODE;
     this.genericPayload.body.ClientCode = CLIENT_CODE;
     request_instance
@@ -96,7 +96,7 @@ function FivePaisaClient(conf) {
       });
   };
 
-  this.order_book = function() {
+  this.getOrderBook = function() {
     this.genericPayload.head.requestCode = ORDER_BOOK_REQUEST_CODE;
     this.genericPayload.body.ClientCode = CLIENT_CODE;
     request_instance
@@ -110,7 +110,7 @@ function FivePaisaClient(conf) {
       });
   };
 
-  this.margin = function() {
+  this.getMargin = function() {
     this.genericPayload.head.requestCode = MARGIN_REQUEST_CODE;
     this.genericPayload.body.ClientCode = CLIENT_CODE;
     request_instance.post(MARGIN_ROUTE, this.genericPayload).then(response => {
@@ -122,7 +122,7 @@ function FivePaisaClient(conf) {
     });
   };
 
-  this.positions = function() {
+  this.getPositions = function() {
     this.genericPayload.head.requestCode = POSITIONS_REQUEST_CODE;
     this.genericPayload.body.ClientCode = CLIENT_CODE;
     request_instance
@@ -149,7 +149,7 @@ function FivePaisaClient(conf) {
       });
   };
 
-  this.place_order = function(
+  this.placeOrder = function(
     orderType,
     scripCode,
     qty,
@@ -180,14 +180,14 @@ function FivePaisaClient(conf) {
     this._order_request("P");
   };
 
-  this.modify_order = function(exchangeOrderID, tradedQty, scripCode) {
+  this.modifyOrder = function(exchangeOrderID, tradedQty, scripCode) {
     this.orderPayload.body.ExchOrderID = exchangeOrderID;
     this.orderPayload.body.TradedQty = tradedQty;
     this.orderPayload.body.ScripCode = scripCode;
     this._order_request("M");
   };
 
-  this.cancel_order = function(exchangeOrderID, tradedQty, scripCode) {
+  this.cancelOrder = function(exchangeOrderID, tradedQty, scripCode) {
     this.orderPayload.body.ExchOrderID = exchangeOrderID;
     this.orderPayload.body.TradedQty = tradedQty;
     this.orderPayload.body.ScripCode = scripCode;
@@ -205,7 +205,7 @@ function FivePaisaClient(conf) {
   ]
   */
 
-  this.order_status = function(orderList) {
+  this.getOrderStatus = function(orderList) {
     this.genericPayload.head.requestCode = ORDER_STATUS_REQUEST_CODE;
     this.genericPayload.body.ClientCode = CLIENT_CODE;
     this.genericPayload.body.OrdStatusReqList = orderList;
@@ -229,7 +229,7 @@ function FivePaisaClient(conf) {
       }
   ]
   */
-  this.trade_info = function(tradeDetailList) {
+  this.getTradeInfo = function(tradeDetailList) {
     this.genericPayload.head.requestCode = TRADE_INFO_REQUEST_CODE;
     this.genericPayload.body.ClientCode = CLIENT_CODE;
     this.genericPayload.body.TradeDetailList = tradeDetailList;
