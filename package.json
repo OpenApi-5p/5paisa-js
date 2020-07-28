@@ -35,7 +35,13 @@
     "*.md",
     "index.js"
   ],
-  "keywords": [],
+  "keywords": [
+    "5paisa-trading-apis",
+    "trading-api",
+    "nodejs",
+    "trading",
+    "algo"
+  ],
   "lint-staged": {
     "*.js": [
       "prettier-eslint --write",
