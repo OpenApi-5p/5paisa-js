@@ -49,6 +49,17 @@ function FivePaisaClient(conf) {
   this.orderPayload.head.userId = conf.userId;
   this.orderPayload.head.password = conf.password;
   this.orderPayload.body.AppSource = conf.appSource;
+  const defaultOrderParams = {
+    exchange: "N",
+    exchangeSegment: "C",
+    atMarket: true,
+    isStopLossOrder: false,
+    stopLossPrice: 0,
+    isVTD: false,
+    isIOCOrder: false,
+    isIntraday: false,
+    ahPlaced: "N"
+  };
 
   const request_instance = axios.create({
     baseURL: BASE_URL,
@@ -149,33 +160,38 @@ function FivePaisaClient(conf) {
       });
   };
 
-  this.placeOrder = function(
-    orderType,
-    scripCode,
-    qty,
-    exchange,
-    exchangeSegment,
-    atMarket,
-    isStopLossOrder,
-    stopLossPrice,
-    isVTD,
-    isIOCOrder,
-    isIntraday,
-    ahPlaced
-  ) {
-    this.orderPayload.body.Exchange = exchange || "B";
-    this.orderPayload.body.ExchangeType = exchangeSegment || "C";
+  this.placeOrder = function(orderType, scripCode, qty, params) {
+    if (orderType === undefined) {
+      throw new Error(
+        `No orderType specified, valid order types are "BUY" and "SELL"`
+      );
+    } else if (scripCode === undefined) {
+      throw new Error(`No scripCode specified`);
+    } else if (qty === undefined) {
+      throw new Error("No quantity specified");
+    }
+    params = params || defaultOrderParams;
     this.orderPayload.body.OrderType = orderType;
     this.orderPayload.body.Qty = qty;
     this.orderPayload.body.ScripCode = scripCode;
-    this.orderPayload.body.AtMarket = atMarket || true;
+    this.orderPayload.body.Exchange =
+      params.exchange || defaultOrderParams.exchange;
+    this.orderPayload.body.ExchangeType =
+      params.exchangeSegment || defaultOrderParams.exchangeSegment;
+    this.orderPayload.body.AtMarket =
+      params.atMarket || defaultOrderParams.atMarket;
     this.orderPayload.body.DisQty = qty;
-    this.orderPayload.body.IsStopLossOrder = isStopLossOrder || false;
-    this.orderPayload.body.StopLossPrice = stopLossPrice || 0;
-    this.orderPayload.body.IsVTD = isVTD || false;
-    this.orderPayload.body.IOCOrder = isIOCOrder || false;
-    this.orderPayload.body.IsIntraday = isIntraday || false;
-    this.orderPayload.body.AHPlaced = ahPlaced || "N";
+    this.orderPayload.body.IsStopLossOrder =
+      params.isStopLossOrder || defaultOrderParams.isStopLossOrder;
+    this.orderPayload.body.StopLossPrice =
+      params.stopLossPrice || defaultOrderParams.stopLossPrice;
+    this.orderPayload.body.IsVTD = params.isVTD || defaultOrderParams.isVTD;
+    this.orderPayload.body.IOCOrder =
+      params.isIOCOrder || defaultOrderParams.isIOCOrder;
+    this.orderPayload.body.IsIntraday =
+      params.isIntraday || defaultOrderParams.isIntraday;
+    this.orderPayload.body.AHPlaced =
+      params.ahPlaced || defaultOrderParams.ahPlaced;
     this.orderPayload.body.TradedQty = 0;
     this._order_request("P");
   };
