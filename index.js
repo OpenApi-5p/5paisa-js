@@ -68,8 +68,8 @@ function FivePaisaClient(conf) {
   });
   request_instance.defaults.headers.common["Content-Type"] = "application/json";
 
-  this.init = function(response) {
-    var promise = new Promise(function(resolve, reject) {
+  this.init = function (response) {
+    var promise = new Promise(function (resolve, reject) {
       if (response.data.body.ClientCode != "INVALID CODE") {
         console.log(GREEN, "Logged in");
         CLIENT_CODE = response.data.body.ClientCode;
@@ -83,7 +83,7 @@ function FivePaisaClient(conf) {
     return promise;
   };
 
-  this.login = function(email, password, DOB) {
+  this.login = function (email, password, DOB) {
     const encryptionKey = conf.encryptionKey;
     this.loginPayload.head.requestCode = LOGIN_REQUEST_CODE;
     this.loginPayload.body.Email_id = encrypt(encryptionKey, email);
@@ -93,7 +93,7 @@ function FivePaisaClient(conf) {
     return req;
   };
 
-  this.getHoldings = function() {
+  this.getHoldings = function () {
     this.genericPayload.head.requestCode = HOLDINGS_REQUEST_CODE;
     this.genericPayload.body.ClientCode = CLIENT_CODE;
     request_instance
@@ -107,7 +107,7 @@ function FivePaisaClient(conf) {
       });
   };
 
-  this.getOrderBook = function() {
+  this.getOrderBook = function () {
     this.genericPayload.head.requestCode = ORDER_BOOK_REQUEST_CODE;
     this.genericPayload.body.ClientCode = CLIENT_CODE;
     request_instance
@@ -121,7 +121,7 @@ function FivePaisaClient(conf) {
       });
   };
 
-  this.getMargin = function() {
+  this.getMargin = function () {
     this.genericPayload.head.requestCode = MARGIN_REQUEST_CODE;
     this.genericPayload.body.ClientCode = CLIENT_CODE;
     request_instance.post(MARGIN_ROUTE, this.genericPayload).then(response => {
@@ -133,7 +133,7 @@ function FivePaisaClient(conf) {
     });
   };
 
-  this.getPositions = function() {
+  this.getPositions = function () {
     this.genericPayload.head.requestCode = POSITIONS_REQUEST_CODE;
     this.genericPayload.body.ClientCode = CLIENT_CODE;
     request_instance
@@ -147,7 +147,7 @@ function FivePaisaClient(conf) {
       });
   };
 
-  this._order_request = function(orderType) {
+  this._order_request = function (orderType) {
     this.orderPayload.body.OrderFor = orderType;
     this.orderPayload.head.requestCode = ORDER_PLACEMENT_REQUEST_CODE;
     this.orderPayload.body.ClientCode = CLIENT_CODE;
@@ -160,7 +160,7 @@ function FivePaisaClient(conf) {
       });
   };
 
-  this.placeOrder = function(orderType, scripCode, qty, params) {
+  this.placeOrder = function (orderType, scripCode, qty, params) {
     if (orderType === undefined) {
       throw new Error(
         `No orderType specified, valid order types are "BUY" and "SELL"`
@@ -178,8 +178,6 @@ function FivePaisaClient(conf) {
       params.exchange || defaultOrderParams.exchange;
     this.orderPayload.body.ExchangeType =
       params.exchangeSegment || defaultOrderParams.exchangeSegment;
-    this.orderPayload.body.AtMarket =
-      params.atMarket || defaultOrderParams.atMarket;
     this.orderPayload.body.DisQty = qty;
     this.orderPayload.body.IsStopLossOrder =
       params.isStopLossOrder || defaultOrderParams.isStopLossOrder;
@@ -192,18 +190,25 @@ function FivePaisaClient(conf) {
       params.isIntraday || defaultOrderParams.isIntraday;
     this.orderPayload.body.AHPlaced =
       params.ahPlaced || defaultOrderParams.ahPlaced;
+    if (this.orderPayload.body.AHPlaced === "Y") {
+      this.orderPayload.body.AtMarket = false
+    }
+    else {
+      this.orderPayload.body.AtMarket =
+        params.atMarket || defaultOrderParams.atMarket;
+    }
     this.orderPayload.body.TradedQty = 0;
     this._order_request("P");
   };
 
-  this.modifyOrder = function(exchangeOrderID, tradedQty, scripCode) {
+  this.modifyOrder = function (exchangeOrderID, tradedQty, scripCode) {
     this.orderPayload.body.ExchOrderID = exchangeOrderID;
     this.orderPayload.body.TradedQty = tradedQty;
     this.orderPayload.body.ScripCode = scripCode;
     this._order_request("M");
   };
 
-  this.cancelOrder = function(exchangeOrderID, tradedQty, scripCode) {
+  this.cancelOrder = function (exchangeOrderID, tradedQty, scripCode) {
     this.orderPayload.body.ExchOrderID = exchangeOrderID;
     this.orderPayload.body.TradedQty = tradedQty;
     this.orderPayload.body.ScripCode = scripCode;
@@ -221,7 +226,7 @@ function FivePaisaClient(conf) {
   ]
   */
 
-  this.getOrderStatus = function(orderList) {
+  this.getOrderStatus = function (orderList) {
     this.genericPayload.head.requestCode = ORDER_STATUS_REQUEST_CODE;
     this.genericPayload.body.ClientCode = CLIENT_CODE;
     this.genericPayload.body.OrdStatusReqList = orderList;
@@ -245,7 +250,7 @@ function FivePaisaClient(conf) {
       }
   ]
   */
-  this.getTradeInfo = function(tradeDetailList) {
+  this.getTradeInfo = function (tradeDetailList) {
     this.genericPayload.head.requestCode = TRADE_INFO_REQUEST_CODE;
     this.genericPayload.body.ClientCode = CLIENT_CODE;
     this.genericPayload.body.TradeDetailList = tradeDetailList;
