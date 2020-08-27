@@ -1,6 +1,6 @@
 {
   "name": "5paisajs",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Javascript client for 5paisa APIs natively written in .NET",
   "scripts": {
     "lint": "eslint --ext js,md .",
@@ -33,7 +33,9 @@
   },
   "files": [
     "*.md",
-    "index.js"
+    "index.js",
+    "utils.js",
+    "const.js"
   ],
   "keywords": [
     "5paisa-trading-apis",
