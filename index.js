@@ -71,11 +71,9 @@ function FivePaisaClient(conf) {
   this.init = function (response) {
     var promise = new Promise(function (resolve, reject) {
       if (response.data.body.ClientCode != "INVALID CODE") {
-        console.log(GREEN, "Logged in");
         CLIENT_CODE = response.data.body.ClientCode;
         resolve();
       } else {
-        console.log(RED, response.data.body.Message);
         reject(response.data.body.Message);
       }
     });
@@ -96,55 +94,29 @@ function FivePaisaClient(conf) {
   this.getHoldings = function () {
     this.genericPayload.head.requestCode = HOLDINGS_REQUEST_CODE;
     this.genericPayload.body.ClientCode = CLIENT_CODE;
-    request_instance
-      .post(HOLDINGS_ROUTE, this.genericPayload)
-      .then(response => {
-        if (response.data.body.Data.length === 0) {
-          console.log(RED, response.data.body.Message);
-        } else {
-          console.log(GREEN, response.data.body.Data);
-        }
-      });
+    var holdings = request_instance.post(HOLDINGS_ROUTE, this.genericPayload);
+    return holdings;
   };
 
   this.getOrderBook = function () {
     this.genericPayload.head.requestCode = ORDER_BOOK_REQUEST_CODE;
     this.genericPayload.body.ClientCode = CLIENT_CODE;
-    request_instance
-      .post(ORDER_BOOK_ROUTE, this.genericPayload)
-      .then(response => {
-        if (response.data.body.OrderBookDetail.length === 0) {
-          console.log(RED, response.data.body.Message);
-        } else {
-          console.log(GREEN, response.data.body.OrderBookDetail);
-        }
-      });
+    var orderBook = request_instance.post(ORDER_BOOK_ROUTE, this.genericPayload);
+    return orderBook;
   };
 
   this.getMargin = function () {
     this.genericPayload.head.requestCode = MARGIN_REQUEST_CODE;
     this.genericPayload.body.ClientCode = CLIENT_CODE;
-    request_instance.post(MARGIN_ROUTE, this.genericPayload).then(response => {
-      if (response.data.body.EquityMargin.length === 0) {
-        console.log(RED, response.data.body.Message);
-      } else {
-        console.log(GREEN, response.data.body.EquityMargin);
-      }
-    });
+    var margin = request_instance.post(MARGIN_ROUTE, this.genericPayload);
+    return margin;
   };
 
   this.getPositions = function () {
     this.genericPayload.head.requestCode = POSITIONS_REQUEST_CODE;
     this.genericPayload.body.ClientCode = CLIENT_CODE;
-    request_instance
-      .post(POSITIONS_ROUTE, this.genericPayload)
-      .then(response => {
-        if (response.data.body.NetPositionDetail.length === 0) {
-          console.log(RED, response.data.body.Message);
-        } else {
-          console.log(GREEN, response.data.body.NetPositionDetail);
-        }
-      });
+    var positions = request_instance.post(POSITIONS_ROUTE, this.genericPayload);
+    return positions;
   };
 
   this._order_request = function (orderType) {
@@ -152,12 +124,8 @@ function FivePaisaClient(conf) {
     this.orderPayload.head.requestCode = ORDER_PLACEMENT_REQUEST_CODE;
     this.orderPayload.body.ClientCode = CLIENT_CODE;
     this.orderPayload.body.OrderRequesterCode = CLIENT_CODE;
-    console.log(this.orderPayload);
-    request_instance
-      .post(ORDER_PLACEMENT_ROUTE, this.orderPayload)
-      .then(response => {
-        console.log(GREEN, response.data.body);
-      });
+    var orderRequest = request_instance.post(ORDER_PLACEMENT_ROUTE, this.orderPayload);
+    return orderRequest;
   };
 
   this.placeOrder = function (orderType, scripCode, qty, params) {
@@ -230,15 +198,8 @@ function FivePaisaClient(conf) {
     this.genericPayload.head.requestCode = ORDER_STATUS_REQUEST_CODE;
     this.genericPayload.body.ClientCode = CLIENT_CODE;
     this.genericPayload.body.OrdStatusReqList = orderList;
-    request_instance
-      .post(ORDER_STATUS_ROUTE, this.genericPayload)
-      .then(response => {
-        if (response.data.body.OrdStatusResLst.length === 0) {
-          console.log(RED, "No info found");
-        } else {
-          console.log(GREEN, response.data.body.OrdStatusReqList);
-        }
-      });
+    var orderStatus = request_instance.post(ORDER_STATUS_ROUTE, this.genericPayload);
+    return orderStatus;
   };
   /*
   Expects a tradeDetailList
@@ -254,15 +215,8 @@ function FivePaisaClient(conf) {
     this.genericPayload.head.requestCode = TRADE_INFO_REQUEST_CODE;
     this.genericPayload.body.ClientCode = CLIENT_CODE;
     this.genericPayload.body.TradeDetailList = tradeDetailList;
-    request_instance
-      .post(TRADE_INFO_ROUTE, this.genericPayload)
-      .then(response => {
-        if (response.data.body.TradeDetail.length === 0) {
-          console.log(RED, "No info found");
-        } else {
-          console.log(GREEN, response.data.body.TradeDetail);
-        }
-      });
+    var tradeInfo = request_instance.post(TRADE_INFO_ROUTE, this.genericPayload);
+    return tradeInfo;
   };
 }
 
