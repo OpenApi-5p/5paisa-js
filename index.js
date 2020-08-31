@@ -68,8 +68,8 @@ function FivePaisaClient(conf) {
   });
   request_instance.defaults.headers.common["Content-Type"] = "application/json";
 
-  this.init = function (response) {
-    var promise = new Promise(function (resolve, reject) {
+  this.init = function(response) {
+    var promise = new Promise(function(resolve, reject) {
       if (response.data.body.ClientCode != "INVALID CODE") {
         console.log(GREEN, "Logged in");
         CLIENT_CODE = response.data.body.ClientCode;
@@ -83,7 +83,7 @@ function FivePaisaClient(conf) {
     return promise;
   };
 
-  this.login = function (email, password, DOB) {
+  this.login = function(email, password, DOB) {
     const encryptionKey = conf.encryptionKey;
     this.loginPayload.head.requestCode = LOGIN_REQUEST_CODE;
     this.loginPayload.body.Email_id = encrypt(encryptionKey, email);
@@ -93,74 +93,90 @@ function FivePaisaClient(conf) {
     return req;
   };
 
-  this.getHoldings = function () {
+  this.getHoldings = function() {
     this.genericPayload.head.requestCode = HOLDINGS_REQUEST_CODE;
     this.genericPayload.body.ClientCode = CLIENT_CODE;
-    request_instance
-      .post(HOLDINGS_ROUTE, this.genericPayload)
-      .then(response => {
+    var payload = this.genericPayload;
+    var promise = new Promise(function(resolve, reject) {
+      request_instance.post(HOLDINGS_ROUTE, payload).then(response => {
         if (response.data.body.Data.length === 0) {
-          console.log(RED, response.data.body.Message);
+          reject(response.data.body.Message);
         } else {
-          console.log(GREEN, response.data.body.Data);
+          resolve(response.data.body.Data);
         }
       });
+    });
+    return promise;
   };
 
-  this.getOrderBook = function () {
+  this.getOrderBook = function() {
     this.genericPayload.head.requestCode = ORDER_BOOK_REQUEST_CODE;
     this.genericPayload.body.ClientCode = CLIENT_CODE;
-    request_instance
-      .post(ORDER_BOOK_ROUTE, this.genericPayload)
-      .then(response => {
+    var payload = this.genericPayload;
+    var promise = new Promise(function(resolve, reject) {
+      request_instance.post(ORDER_BOOK_ROUTE, payload).then(response => {
         if (response.data.body.OrderBookDetail.length === 0) {
-          console.log(RED, response.data.body.Message);
+          reject(response.data.body.Message);
         } else {
-          console.log(GREEN, response.data.body.OrderBookDetail);
+          resolve(response.data.body.OrderBookDetail);
         }
       });
+    });
+    return promise;
   };
 
-  this.getMargin = function () {
+  this.getMargin = function() {
     this.genericPayload.head.requestCode = MARGIN_REQUEST_CODE;
     this.genericPayload.body.ClientCode = CLIENT_CODE;
-    request_instance.post(MARGIN_ROUTE, this.genericPayload).then(response => {
-      if (response.data.body.EquityMargin.length === 0) {
-        console.log(RED, response.data.body.Message);
-      } else {
-        console.log(GREEN, response.data.body.EquityMargin);
-      }
-    });
-  };
-
-  this.getPositions = function () {
-    this.genericPayload.head.requestCode = POSITIONS_REQUEST_CODE;
-    this.genericPayload.body.ClientCode = CLIENT_CODE;
-    request_instance
-      .post(POSITIONS_ROUTE, this.genericPayload)
-      .then(response => {
-        if (response.data.body.NetPositionDetail.length === 0) {
-          console.log(RED, response.data.body.Message);
+    var payload = this.genericPayload;
+    var promise = new Promise(function(resolve, reject) {
+      request_instance.post(MARGIN_ROUTE, payload).then(response => {
+        if (response.data.body.EquityMargin.length === 0) {
+          reject(response.data.body.Message);
         } else {
-          console.log(GREEN, response.data.body.NetPositionDetail);
+          resolve(response.data.body.EquityMargin);
         }
       });
+    });
+    return promise;
   };
 
-  this._order_request = function (orderType) {
+  this.getPositions = function() {
+    this.genericPayload.head.requestCode = POSITIONS_REQUEST_CODE;
+    this.genericPayload.body.ClientCode = CLIENT_CODE;
+    var payload = this.genericPayload;
+    var promise = new Promise(function(resolve, reject) {
+      request_instance.post(POSITIONS_ROUTE, payload).then(response => {
+        if (response.data.body.NetPositionDetail.length === 0) {
+          reject(response.data.body.Message);
+        } else {
+          resolve(response.data.body.NetPositionDetail);
+        }
+      });
+    });
+    return promise;
+  };
+
+  this._order_request = function(orderType) {
     this.orderPayload.body.OrderFor = orderType;
     this.orderPayload.head.requestCode = ORDER_PLACEMENT_REQUEST_CODE;
     this.orderPayload.body.ClientCode = CLIENT_CODE;
     this.orderPayload.body.OrderRequesterCode = CLIENT_CODE;
-    console.log(this.orderPayload);
-    request_instance
-      .post(ORDER_PLACEMENT_ROUTE, this.orderPayload)
-      .then(response => {
-        console.log(GREEN, response.data.body);
-      });
+    var payload = this.orderPayload;
+    var promise = new Promise(function(resolve, reject) {
+      request_instance
+        .post(ORDER_PLACEMENT_ROUTE, payload)
+        .then(response => {
+          resolve(response.data.body);
+        })
+        .catch(err => {
+          reject(err);
+        });
+    });
+    return promise;
   };
 
-  this.placeOrder = function (orderType, scripCode, qty, params) {
+  this.placeOrder = function(orderType, scripCode, qty, params) {
     if (orderType === undefined) {
       throw new Error(
         `No orderType specified, valid order types are "BUY" and "SELL"`
@@ -191,28 +207,27 @@ function FivePaisaClient(conf) {
     this.orderPayload.body.AHPlaced =
       params.ahPlaced || defaultOrderParams.ahPlaced;
     if (this.orderPayload.body.AHPlaced === "Y") {
-      this.orderPayload.body.AtMarket = false
-    }
-    else {
+      this.orderPayload.body.AtMarket = false;
+    } else {
       this.orderPayload.body.AtMarket =
         params.atMarket || defaultOrderParams.atMarket;
     }
     this.orderPayload.body.TradedQty = 0;
-    this._order_request("P");
+    return this._order_request("P");
   };
 
-  this.modifyOrder = function (exchangeOrderID, tradedQty, scripCode) {
+  this.modifyOrder = function(exchangeOrderID, tradedQty, scripCode) {
     this.orderPayload.body.ExchOrderID = exchangeOrderID;
     this.orderPayload.body.TradedQty = tradedQty;
     this.orderPayload.body.ScripCode = scripCode;
-    this._order_request("M");
+    return this._order_request("M");
   };
 
-  this.cancelOrder = function (exchangeOrderID, tradedQty, scripCode) {
+  this.cancelOrder = function(exchangeOrderID, tradedQty, scripCode) {
     this.orderPayload.body.ExchOrderID = exchangeOrderID;
     this.orderPayload.body.TradedQty = tradedQty;
     this.orderPayload.body.ScripCode = scripCode;
-    this._order_request("C");
+    return this._order_request("C");
   };
 
   /*
@@ -226,19 +241,21 @@ function FivePaisaClient(conf) {
   ]
   */
 
-  this.getOrderStatus = function (orderList) {
+  this.getOrderStatus = function(orderList) {
     this.genericPayload.head.requestCode = ORDER_STATUS_REQUEST_CODE;
     this.genericPayload.body.ClientCode = CLIENT_CODE;
     this.genericPayload.body.OrdStatusReqList = orderList;
-    request_instance
-      .post(ORDER_STATUS_ROUTE, this.genericPayload)
-      .then(response => {
+    var payload = this.genericPayload;
+    var promise = new Promise(function(resolve, reject) {
+      request_instance.post(ORDER_STATUS_ROUTE, payload).then(response => {
         if (response.data.body.OrdStatusResLst.length === 0) {
-          console.log(RED, "No info found");
+          reject({ err: "No info found" });
         } else {
-          console.log(GREEN, response.data.body.OrdStatusReqList);
+          resolve(response.data.body.OrdStatusReqList);
         }
       });
+    });
+    return promise;
   };
   /*
   Expects a tradeDetailList
@@ -250,19 +267,21 @@ function FivePaisaClient(conf) {
       }
   ]
   */
-  this.getTradeInfo = function (tradeDetailList) {
+  this.getTradeInfo = function(tradeDetailList) {
     this.genericPayload.head.requestCode = TRADE_INFO_REQUEST_CODE;
     this.genericPayload.body.ClientCode = CLIENT_CODE;
     this.genericPayload.body.TradeDetailList = tradeDetailList;
-    request_instance
-      .post(TRADE_INFO_ROUTE, this.genericPayload)
-      .then(response => {
+    var payload = this.genericPayload;
+    var promise = new Promise(function(resolve, reject) {
+      request_instance.post(TRADE_INFO_ROUTE, payload).then(response => {
         if (response.data.body.TradeDetail.length === 0) {
-          console.log(RED, "No info found");
+          reject({ err: "No info found" });
         } else {
-          console.log(GREEN, response.data.body.TradeDetail);
+          resolve(response.data.body.TradeDetail);
         }
       });
+    });
+    return promise;
   };
 }
 
