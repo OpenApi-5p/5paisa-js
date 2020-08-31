@@ -29,7 +29,11 @@ var client = new FivePaisaClient(conf)
 // Logging in
 client.login("random_email@xyz.com", "password", "YYYYMMDD").then((response) => {
     client.init(response).then(() => {
-        client.getHoldings()
+        client.getHoldings().then((response) => {
+            console.log(response)
+        }).catch((err) => {
+            console.log(err)
+        })
     })
 }).catch()
 
