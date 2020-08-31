@@ -63,7 +63,7 @@ const ORDER_PLACEMENT_PAYLOAD = {
     OrderType: "BUY",
     Qty: 0,
     OrderDateTime: `/Date(${today})/`,
-    ScripCode: 11809,
+    ScripCode: "",
     AtMarket: true,
     RemoteOrderID: "1",
     ExchOrderID: 0,
@@ -83,8 +83,23 @@ const ORDER_PLACEMENT_PAYLOAD = {
   }
 };
 
+/**
+ * Enum for Order validity.
+ * @readonly
+ * @enum {number}
+ */
+const OrderValidityEnum = {
+  Day: 0,
+  GTD: 1,
+  GTC: 2,
+  IOC: 3,
+  EOS: 4,
+  FOK: 6
+};
+
 module.exports = {
   genericPayload: GENERIC_PAYLOAD,
   loginPayload: LOGIN_PAYLOAD,
-  orderPayload: ORDER_PLACEMENT_PAYLOAD
+  orderPayload: ORDER_PLACEMENT_PAYLOAD,
+  OrderValidityEnum: OrderValidityEnum
 };

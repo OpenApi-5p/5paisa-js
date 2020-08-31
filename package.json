@@ -1,6 +1,6 @@
 {
   "name": "5paisajs",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "Javascript client for 5paisa APIs natively written in .NET",
   "scripts": {
     "lint": "eslint --ext js,md .",
@@ -11,6 +11,7 @@
   "dependencies": {
     "axios": "^0.19.2",
     "axios-cookiejar-support": "^1.0.0",
+    "jsdoc": "^3.6.5",
     "tough-cookie": "^4.0.0"
   },
   "devDependencies": {

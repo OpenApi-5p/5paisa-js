@@ -25,7 +25,7 @@ const conf = {
     "encryptionKey": ""
 }
 
-const FivePaisaClient = require("5paisajs")
+const { FivePaisaClient } = require("5paisajs")
 
 var client = new FivePaisaClient(conf)
 
@@ -108,11 +108,15 @@ client.getPositions().then((positions) => {
 ### Place cash order
 
 ```js
-client.placeOrder("BUY", "1111", 1, "N").then((response) => {
-    console.log(response)
-}).catch((err) => {
+var options = {}
+try {
+      client.placeOrder("BUY", "11111", "1", "B", options).then((response) => {
+          console.log(response)
+        })
+    }
+catch (err) {
     console.log(err)
-});
+  }
 
 /*
 {
@@ -124,7 +128,7 @@ client.placeOrder("BUY", "1111", 1, "N").then((response) => {
   LocalOrderID: 0,
   Message: 'Success',
   RMSResponseCode: 0,
-  ScripCode: 17484,
+  ScripCode: 11111,
   Status: 0,
   Time: '/Date(1598812200000+0530)/'
 }

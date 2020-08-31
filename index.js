@@ -2,7 +2,12 @@
 const axios = require("axios");
 const axiosCookieJarSupport = require("axios-cookiejar-support").default;
 const tough = require("tough-cookie");
-const { genericPayload, loginPayload, orderPayload } = require("./const");
+const {
+  genericPayload,
+  loginPayload,
+  orderPayload,
+  OrderValidityEnum
+} = require("./const");
 const { encrypt } = require("./utils");
 
 axiosCookieJarSupport(axios);
@@ -11,6 +16,23 @@ const cookieJar = new tough.CookieJar();
 const GREEN = "\x1b[32m";
 const RED = "\x1b[31m";
 
+/**
+ * Initializes a new client object with the app keys.
+ * This client object can be further used to login multiple clients.
+ * @class
+ * @param {Object} conf - The conf object containing the app's API keys.
+ * @example <caption>Initialize FivePaisaClient object</caption>
+ * const FivePaisaClient = require("5paisajs")
+ * const conf = {
+   "appSource": "",
+   "appName": "",
+   "userId": "",
+   "password": "",
+   "userKey": "",
+   "encryptionKey": ""
+ * var client  = FivePaisaClient(conf)
+
+ */
 function FivePaisaClient(conf) {
   // Routes
   const BASE_URL = "https://Openapi.5paisa.com/VendorsAPI/Service1.svc";
@@ -58,9 +80,12 @@ function FivePaisaClient(conf) {
     isVTD: false,
     isIOCOrder: false,
     isIntraday: false,
-    ahPlaced: "N"
+    ahPlaced: "N",
+    IOCOrder: false,
+    orderValidity: OrderValidityEnum.Day
   };
 
+  // Request instance to be used throughout, with cookie support.
   const request_instance = axios.create({
     baseURL: BASE_URL,
     jar: cookieJar,
@@ -68,6 +93,12 @@ function FivePaisaClient(conf) {
   });
   request_instance.defaults.headers.common["Content-Type"] = "application/json";
 
+  /**
+   * Handles the response from the login method and returns a promise.
+   * @method init
+   * @memberOf FivePaisaClient
+   * @param {Object} response
+   */
   this.init = function(response) {
     var promise = new Promise(function(resolve, reject) {
       if (response.data.body.ClientCode != "INVALID CODE") {
@@ -83,6 +114,39 @@ function FivePaisaClient(conf) {
     return promise;
   };
 
+  /**
+   * Logs in the client.
+   * @method login
+   * @memberOf FivePaisaClient
+   * @param {string} email - Client's email
+   * @param {string} password - Client's password
+   * @param {string} DOB - Client's DOB in YYYYMMDD format
+   * @example <caption> Logging in a user </caption>
+   * const conf = {
+   * "appSource": "",
+   * "appName": "",
+   * "userId": "",
+   * "password": "",
+   * "userKey": "",
+   * "encryptionKey": ""
+   * }
+
+   * const { FivePaisaClient} = require("5paisajs")
+   *
+   * var client = new FivePaisaClient(conf)
+   *
+   * // This client object can be used to login multiple users.
+   * client.login("random_email@xyz.com", "password", "YYYYMMDD").then((response) => {
+   *     client.init(response).then(() => {
+   *         // Fetch holdings, positions or place orders here.
+   *         // See following examples.
+   *     })
+   * }).catch((err) =>{
+   *     // Oh no :/
+   *     console.log(err)
+   * })
+
+   */
   this.login = function(email, password, DOB) {
     const encryptionKey = conf.encryptionKey;
     this.loginPayload.head.requestCode = LOGIN_REQUEST_CODE;
@@ -93,6 +157,18 @@ function FivePaisaClient(conf) {
     return req;
   };
 
+  /**
+   * Fetches holdings for the client.
+   * @method getHoldings
+   * @memberOf FivePaisaClient
+   * @returns {Array} Array containing holdings
+   * @example <caption>Fetching holdings</caption>
+   * client.getHoldings().then((holdings) => {
+   *    console.log(holdings)
+   *  }).catch((err) => {
+   *    console.log(err)
+   *  });
+   */
   this.getHoldings = function() {
     this.genericPayload.head.requestCode = HOLDINGS_REQUEST_CODE;
     this.genericPayload.body.ClientCode = CLIENT_CODE;
@@ -109,6 +185,18 @@ function FivePaisaClient(conf) {
     return promise;
   };
 
+  /**
+   * Fetches orders for the client.
+   * @method getOrderBook
+   * @memberOf FivePaisaClient
+   * @returns {Array} Array containing orders
+   * @example <caption>Fetching orders</caption>
+   * client.getOrderBook().then((orders) => {
+   *    console.log(orders)
+   *  }).catch((err) => {
+   *    console.log(err)
+   *  });
+   */
   this.getOrderBook = function() {
     this.genericPayload.head.requestCode = ORDER_BOOK_REQUEST_CODE;
     this.genericPayload.body.ClientCode = CLIENT_CODE;
@@ -125,6 +213,18 @@ function FivePaisaClient(conf) {
     return promise;
   };
 
+  /**
+   * Fetches margin details for the client.
+   * @method getMargin
+   * @memberOf FivePaisaClient
+   * @returns {Array} Array containing margin details
+   * @example <caption>Fetching margin details</caption>
+   * client.getMargin().then((marginDetails) => {
+   *    console.log(marginDetails)
+   *  }).catch((err) => {
+   *    console.log(err)
+   *  });
+   */
   this.getMargin = function() {
     this.genericPayload.head.requestCode = MARGIN_REQUEST_CODE;
     this.genericPayload.body.ClientCode = CLIENT_CODE;
@@ -141,6 +241,18 @@ function FivePaisaClient(conf) {
     return promise;
   };
 
+  /**
+   * Fetches position details for the client.
+   * @method getPositions
+   * @memberOf FivePaisaClient
+   * @returns {Array} Array containing position details
+   * @example <caption>Fetching margins</caption>
+   * client.getPositions().then((positionDetails) => {
+   *    console.log(positionDetails)
+   *  }).catch((err) => {
+   *    console.log(err)
+   *  });
+   */
   this.getPositions = function() {
     this.genericPayload.head.requestCode = POSITIONS_REQUEST_CODE;
     this.genericPayload.body.ClientCode = CLIENT_CODE;
@@ -176,22 +288,73 @@ function FivePaisaClient(conf) {
     return promise;
   };
 
-  this.placeOrder = function(orderType, scripCode, qty, params) {
+  /**
+   * Parameter object containing options to place complex orders.
+   * @typedef {Object} OrderRequestParams
+   * @property {string} [exchangeSegment=C] - Exchange Segment. "C"- Cash, "D"- Derivative, "U" - Currency
+   * @property {boolean} [atMarket=true] - true - For market order, false - For limit order
+   * @property {boolean} [isStopLossOrder=false] - true - For stoploss order, false - For regular order
+   * @property {float} [stopLossPrice=0] - This will be the trigger price. This will be set when user want to place stop loss order. (For Buy Stop loss, Trigger price should not be greater than Limit Price.
+   *                                 And for Sell Stop Loss Order Trigger Price should not be less than Limit Price)
+   * @property {boolean} [isVTD=false] -
+   * @property {boolean} [isIOCOrder=false] - Send true in case order is IOC.
+   * @property {boolean} [isIntraday=false] - true - For intraday order, false - for delivery order.
+   * @property {boolean} [ahPlaced=N] - "Y -in case order placed after market closed. N-Normal Market time Order
+   * @property {boolean} [DisQty] - Quantity exposed in the exchange. Disclosed quantity is never larger than order quantity.
+   * @property {boolean} [IOCOrder=false] - true - For IOC order, false - For regular order.
+   * @property {OrderValidityEnum} [iOrderValidity] - true - Order validity.
+   *
+   */
+
+  /**
+   * @typedef {Object} OrderResponse
+   * @property {number} BrokerOrderID - Order ID
+   * @property {string} ClientCode - ClientCode
+   * @property {string} Exch - Exchange. "B" - BSE, "N" - NSE.
+   * @property {string} ExchOrderID - Order ID generated by the exchange.
+   * @property {string} ExchType - Exchange Segment. "C"- Cash, "D"- Derivative, "U" - Currency
+   * @property {number} LocalOrderID - 0
+   * @property {string} Message -
+   * @property {number} RMSResponseCode -
+   * @property {number} ScripCode -
+   * @property {number} Status -
+   * @property {string} Time - /Date(1599417000000+0530)/
+   *
+   */
+
+  /**
+   * Places a fresh order
+   * @method placeOrder
+   * @memberOf FivePaisaClient
+   * @returns {OrderResponse}
+   * @param {string} orderType - "BUY" - Buy, "SELL" - Sell
+   * @param {string} scripCode - Scrip code of the scrip.
+   * @param {number} qty - Quantity of the scrip to be traded.
+   * @param {string} exchange - Exchange name. "N" - NSE, "B" - BSE
+   * @param {OrderRequestParams} [params] - Parameters for placing complex orders
+   */
+  this.placeOrder = function(orderType, scripCode, qty, exchange, params) {
     if (orderType === undefined) {
       throw new Error(
         `No orderType specified, valid order types are "BUY" and "SELL"`
       );
-    } else if (scripCode === undefined) {
+    }
+    if (scripCode === undefined) {
       throw new Error(`No scripCode specified`);
-    } else if (qty === undefined) {
+    }
+    if (qty === undefined) {
       throw new Error("No quantity specified");
+    }
+    if (exchange == undefined) {
+      throw new Error(
+        `No exchange specified, valid exchange types are "NSE" and "BSE"`
+      );
     }
     params = params || defaultOrderParams;
     this.orderPayload.body.OrderType = orderType;
     this.orderPayload.body.Qty = qty;
     this.orderPayload.body.ScripCode = scripCode;
-    this.orderPayload.body.Exchange =
-      params.exchange || defaultOrderParams.exchange;
+    this.orderPayload.body.Exchange = exchange || defaultOrderParams.exchange;
     this.orderPayload.body.ExchangeType =
       params.exchangeSegment || defaultOrderParams.exchangeSegment;
     this.orderPayload.body.DisQty = qty;
@@ -213,9 +376,23 @@ function FivePaisaClient(conf) {
         params.atMarket || defaultOrderParams.atMarket;
     }
     this.orderPayload.body.TradedQty = 0;
+    this.orderPayload.body.DisQty = params.DisQty || qty;
+    this.orderPayload.body.IOCOrder =
+      params.IOCOrder || defaultOrderParams.IOCOrder;
+    this.orderPayload.iOrderValidity =
+      params.iOrderValidity || defaultOrderParams.orderValidity;
     return this._order_request("P");
   };
 
+  /**
+   * Modifies an order
+   * @method modifyOrder
+   * @memberOf FivePaisaClient
+   * @returns {Object}
+   * @param {string} exchangeOrderID - Exchange order ID received from exchange.
+   * @param {number} tradedQty - The traded quantity for the scrip. Incorrect value would lead to order rejection.
+   * @param {number} scripCode - Scrip code of the scrip.
+   */
   this.modifyOrder = function(exchangeOrderID, tradedQty, scripCode) {
     this.orderPayload.body.ExchOrderID = exchangeOrderID;
     this.orderPayload.body.TradedQty = tradedQty;
@@ -223,6 +400,15 @@ function FivePaisaClient(conf) {
     return this._order_request("M");
   };
 
+  /**
+   * Cancels an order
+   * @method cancelOrder
+   * @memberOf FivePaisaClient
+   * @returns {Object}
+   * @param {string} exchangeOrderID - Exchange order ID received from exchange.
+   * @param {number} tradedQty - The traded quantity for the scrip. Incorrect value would lead to order rejection.
+   * @param {number} scripCode - Scrip code of the scrip.
+   */
   this.cancelOrder = function(exchangeOrderID, tradedQty, scripCode) {
     this.orderPayload.body.ExchOrderID = exchangeOrderID;
     this.orderPayload.body.TradedQty = tradedQty;
@@ -230,17 +416,21 @@ function FivePaisaClient(conf) {
     return this._order_request("C");
   };
 
-  /*
-  Expects a order:ist
-  [{
-        "Exch": "N",
-        "ExchType": "C",
-        "ScripCode": 11536,
-        "RemoteOrderID": "5712977609111312242"
-      }
-  ]
-  */
-
+  /**
+   * Gets the order status of the orders provided
+   * @method cancelOrder
+   * @memberOf FivePaisaClient
+   * @returns {Object}
+   * @param {Array} orderList - Array containing order details.
+   * [
+   *  {
+   *      "Exch":"N",
+   *      "ExchType":"C",
+   *      "ScripCode":11111,
+   *      "RemoteOrderID":"5712977609111312242"
+   *  }
+   * ]
+   */
   this.getOrderStatus = function(orderList) {
     this.genericPayload.head.requestCode = ORDER_STATUS_REQUEST_CODE;
     this.genericPayload.body.ClientCode = CLIENT_CODE;
@@ -257,16 +447,22 @@ function FivePaisaClient(conf) {
     });
     return promise;
   };
-  /*
-  Expects a tradeDetailList
-  [{
-        "Exch": "N",
-        "ExchType": "C",
-        "ScripCode": 11536,
-        "RemoteOrderID": "5712977609111312242"
-      }
-  ]
-  */
+
+  /**
+   * Gets the trade information for a set of trades provided
+   * @method getTradeInfo
+   * @memberOf FivePaisaClient
+   * @returns {Object}
+   * @param {Array} tradeDetailList - Array containing trades
+   * [
+   *  {
+   *      "Exch":"N",
+   *      "ExchType":"C",
+   *      "ScripCode":11111,
+   *      "RemoteOrderID":"5712977609111312242"
+   *  }
+   * ]
+   */
   this.getTradeInfo = function(tradeDetailList) {
     this.genericPayload.head.requestCode = TRADE_INFO_REQUEST_CODE;
     this.genericPayload.body.ClientCode = CLIENT_CODE;
@@ -285,4 +481,7 @@ function FivePaisaClient(conf) {
   };
 }
 
-module.exports = FivePaisaClient;
+module.exports = {
+  FivePaisaClient: FivePaisaClient,
+  OrderValidityEnum: OrderValidityEnum
+};
