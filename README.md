@@ -8,6 +8,10 @@ Official Javascript client for 5paisa APIs natively written in .NET
 npm install 5paisajs --save
 ```
 
+## Documentation
+
+Docs are hosted at https://5paisa.github.io/5paisa-js/
+
 ## Usage
 
 ### Authentication
