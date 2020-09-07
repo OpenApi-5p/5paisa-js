@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Home - Documentation</title>
+
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav>
+    <li class="nav-link nav-home-link"><a href="index.html">Home</a></li><li class="nav-heading">Classes</li><li class="nav-heading"><span class="nav-item-type type-class">C</span><span class="nav-item-name"><a href="FivePaisaClient.html">FivePaisaClient</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="FivePaisaClient.html#.cancelOrder">cancelOrder</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="FivePaisaClient.html#.getHoldings">getHoldings</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="FivePaisaClient.html#.getMargin">getMargin</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="FivePaisaClient.html#.getOrderBook">getOrderBook</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="FivePaisaClient.html#.getOrderStatus">getOrderStatus</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="FivePaisaClient.html#.getPositions">getPositions</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="FivePaisaClient.html#.getTradeInfo">getTradeInfo</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="FivePaisaClient.html#.init">init</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="FivePaisaClient.html#.login">login</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="FivePaisaClient.html#.modifyOrder">modifyOrder</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="FivePaisaClient.html#.placeOrder">placeOrder</a></span></li><li class="nav-heading"><a href="global.html">Globals</a></li><li class="nav-item"><span class="nav-item-type type-member">M</span><span class="nav-item-name"><a href="global.html#OrderValidityEnum">OrderValidityEnum</a></span></li>
+</nav>
+
+<div id="main">
+    
+
+    
+
+
+
+    
+
+
+
+
+
+
+
+
+
+    
+
+
+    <section class="readme">
+        <article><h1>5paisajs</h1>
+<p>Official Javascript client for 5paisa APIs natively written in .NET</p>
+<h2>Installation</h2>
+<pre class="prettyprint source"><code>npm install 5paisajs --save
+</code></pre>
+<h2>Usage</h2>
+<h3>Authentication</h3>
+<p>Get your API keys from https://www.5paisa.com/DeveloperAPI/APIKeys</p>
+<pre class="prettyprint source lang-js"><code>// Configuration for your app
+const conf = {
+    &quot;appSource&quot;: &quot;&quot;,
+    &quot;appName&quot;: &quot;&quot;,
+    &quot;userId&quot;: &quot;&quot;,
+    &quot;password&quot;: &quot;&quot;,
+    &quot;userKey&quot;: &quot;&quot;,
+    &quot;encryptionKey&quot;: &quot;&quot;
+}
+
+const { FivePaisaClient } = require(&quot;5paisajs&quot;)
+
+var client = new FivePaisaClient(conf)
+
+// This client object can be used to login multiple users.
+client.login(&quot;random_email@xyz.com&quot;, &quot;password&quot;, &quot;YYYYMMDD&quot;).then((response) => {
+    client.init(response).then(() => {
+        // Fetch holdings, positions or place orders here.
+        // Some things to try out are given below.
+    })
+}).catch((err) =>{
+    // Oh no :/
+    console.log(err)
+})
+
+</code></pre>
+<h3>Fetch Holdings</h3>
+<pre class="prettyprint source lang-js"><code>client.getHoldings().then((holdings) => {
+    console.log(holdings)
+}).catch((err) => {
+    console.log(err)
+});
+
+/*
+[
+  {
+    BseCode: 535755,
+    CurrentPrice: 140,
+    DPQty: 0,
+    Exch: '\x00',
+    ExchType: 'C',
+    FullName: 'XYZ ABC',
+    NseCode: 30108,
+    POASigned: 'N',
+    PoolQty: 1,
+    Quantity: 1,
+    ScripMultiplier: 1,
+    Symbol: 'XYZ'
+  }
+]
+*/
+</code></pre>
+<h3>Fetch Positions</h3>
+<pre class="prettyprint source lang-js"><code>client.getPositions().then((positions) => {
+    console.log(positions)
+}).catch((err) => {
+    console.log(err)
+});
+/*
+[
+  {
+    BodQty: 0,
+    BookedPL: 0,
+    BuyAvgRate: 2.15,
+    BuyQty: 2,
+    BuyValue: 4.3,
+    Exch: 'N',
+    ExchType: 'C',
+    LTP: 2.15,
+    MTOM: 0,
+    Multiplier: 1,
+    NetQty: 2,
+    OrderFor: 'D',
+    PreviousClose: 2.25,
+    ScripCode: 5831,
+    ScripName: 'XYZ',
+    SellAvgRate: 0,
+    SellQty: 0,
+    SellValue: 0
+  }
+]
+*/
+</code></pre>
+<h3>Place cash order</h3>
+<pre class="prettyprint source lang-js"><code>var options = {}
+try {
+      client.placeOrder(&quot;BUY&quot;, &quot;11111&quot;, &quot;1&quot;, &quot;B&quot;, options).then((response) => {
+          console.log(response)
+        })
+    }
+catch (err) {
+    console.log(err)
+  }
+
+/*
+{
+  BrokerOrderID: 302493444,
+  ClientCode: '51882016',
+  Exch: 'N',
+  ExchOrderID: '',
+  ExchType: 'C',
+  LocalOrderID: 0,
+  Message: 'Success',
+  RMSResponseCode: 0,
+  ScripCode: 11111,
+  Status: 0,
+  Time: '/Date(1598812200000+0530)/'
+}
+*/
+</code></pre></article>
+    </section>
+
+
+
+
+
+
+</div>
+
+<br class="clear">
+
+<footer>
+    Generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.5</a> on Mon Sep 07 2020 14:59:41 GMT+0530 (India Standard Time) using the Minami theme.
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/linenumber.js"></script>
+</body>
+</html>

@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>const.js - Documentation</title>
+
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav>
+    <li class="nav-link nav-home-link"><a href="index.html">Home</a></li><li class="nav-heading">Classes</li><li class="nav-heading"><span class="nav-item-type type-class">C</span><span class="nav-item-name"><a href="FivePaisaClient.html">FivePaisaClient</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="FivePaisaClient.html#.cancelOrder">cancelOrder</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="FivePaisaClient.html#.getHoldings">getHoldings</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="FivePaisaClient.html#.getMargin">getMargin</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="FivePaisaClient.html#.getOrderBook">getOrderBook</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="FivePaisaClient.html#.getOrderStatus">getOrderStatus</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="FivePaisaClient.html#.getPositions">getPositions</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="FivePaisaClient.html#.getTradeInfo">getTradeInfo</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="FivePaisaClient.html#.init">init</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="FivePaisaClient.html#.login">login</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="FivePaisaClient.html#.modifyOrder">modifyOrder</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="FivePaisaClient.html#.placeOrder">placeOrder</a></span></li><li class="nav-heading"><a href="global.html">Globals</a></li><li class="nav-item"><span class="nav-item-type type-member">M</span><span class="nav-item-name"><a href="global.html#OrderValidityEnum">OrderValidityEnum</a></span></li>
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">const.js</h1>
+    
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>const date = new Date();
+const today = date.getTime();
+date.setDate(date.getDate() + 1);
+const followingDay = date.getTime();
+
+const GENERIC_PAYLOAD = {
+  head: {
+    appName: "",
+    appVer: "1.0",
+    key: "",
+    osName: "WEB",
+    requestCode: "",
+    userId: "",
+    password: ""
+  },
+  body: {
+    ClientCode: ""
+  }
+};
+
+const LOGIN_PAYLOAD = {
+  head: {
+    appName: "",
+    appVer: "1.0",
+    key: "",
+    osName: "WEB",
+    requestCode: "5PLoginV2",
+    userId: "",
+    password: ""
+  },
+  body: {
+    Email_id: "",
+    Password: "",
+    LocalIP: "192.168.1.1",
+    PublicIP: "192.168.1.1",
+    HDSerailNumber: "",
+    MACAddress: "",
+    MachineID: "039377",
+    VersionNo: "1.7",
+    RequestNo: "1",
+    My2PIN: "",
+    ConnectionType: "1"
+  }
+};
+
+const ORDER_PLACEMENT_PAYLOAD = {
+  head: {
+    appName: "",
+    appVer: "1.0",
+    key: "",
+    osName: "WEB",
+    requestCode: "",
+    userId: "",
+    password: ""
+  },
+  body: {
+    ClientCode: "1234567",
+    OrderFor: "P",
+    Exchange: "B",
+    ExchangeType: "C",
+    Price: 0.0,
+    OrderID: 0,
+    OrderType: "BUY",
+    Qty: 0,
+    OrderDateTime: `/Date(${today})/`,
+    ScripCode: "",
+    AtMarket: true,
+    RemoteOrderID: "1",
+    ExchOrderID: 0,
+    DisQty: 0,
+    IsStopLossOrder: false,
+    StopLossPrice: 0,
+    IsVTD: false,
+    IOCOrder: false,
+    IsIntraday: false,
+    PublicIP: "192.168.1.1",
+    AHPlaced: "N",
+    ValidTillDate: `/Date(${followingDay})/`,
+    iOrderValidity: 0,
+    TradedQty: 0,
+    OrderRequesterCode: "",
+    AppSource: 0
+  }
+};
+
+/**
+ * Enum for Order validity.
+ * @readonly
+ * @enum {number}
+ */
+const OrderValidityEnum = {
+  Day: 0,
+  GTD: 1,
+  GTC: 2,
+  IOC: 3,
+  EOS: 4,
+  FOK: 6
+};
+
+module.exports = {
+  genericPayload: GENERIC_PAYLOAD,
+  loginPayload: LOGIN_PAYLOAD,
+  orderPayload: ORDER_PLACEMENT_PAYLOAD,
+  OrderValidityEnum: OrderValidityEnum
+};
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<br class="clear">
+
+<footer>
+    Generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.5</a> on Mon Sep 07 2020 14:59:41 GMT+0530 (India Standard Time) using the Minami theme.
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/linenumber.js"></script>
+</body>
+</html>

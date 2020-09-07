@@ -1,4 +1,45 @@
-"use strict";
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>index.js - Documentation</title>
+
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav>
+    <li class="nav-link nav-home-link"><a href="index.html">Home</a></li><li class="nav-heading">Classes</li><li class="nav-heading"><span class="nav-item-type type-class">C</span><span class="nav-item-name"><a href="FivePaisaClient.html">FivePaisaClient</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="FivePaisaClient.html#.cancelOrder">cancelOrder</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="FivePaisaClient.html#.getHoldings">getHoldings</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="FivePaisaClient.html#.getMargin">getMargin</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="FivePaisaClient.html#.getOrderBook">getOrderBook</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="FivePaisaClient.html#.getOrderStatus">getOrderStatus</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="FivePaisaClient.html#.getPositions">getPositions</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="FivePaisaClient.html#.getTradeInfo">getTradeInfo</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="FivePaisaClient.html#.init">init</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="FivePaisaClient.html#.login">login</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="FivePaisaClient.html#.modifyOrder">modifyOrder</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="FivePaisaClient.html#.placeOrder">placeOrder</a></span></li><li class="nav-heading"><a href="global.html">Globals</a></li><li class="nav-item"><span class="nav-item-type type-member">M</span><span class="nav-item-name"><a href="global.html#OrderValidityEnum">OrderValidityEnum</a></span></li>
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">index.js</h1>
+    
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>"use strict";
 const axios = require("axios");
 const axiosCookieJarSupport = require("axios-cookiejar-support").default;
 const tough = require("tough-cookie");
@@ -21,7 +62,7 @@ const RED = "\x1b[31m";
  * This client object can be further used to login multiple clients.
  * @class
  * @param {Object} conf - The conf object containing the app's API keys.
- * @example <caption>Initialize FivePaisaClient object</caption>
+ * @example &lt;caption>Initialize FivePaisaClient object&lt;/caption>
  * const FivePaisaClient = require("5paisajs")
  * const conf = {
    "appSource": "",
@@ -121,7 +162,7 @@ function FivePaisaClient(conf) {
    * @param {string} email - Client's email
    * @param {string} password - Client's password
    * @param {string} DOB - Client's DOB in YYYYMMDD format
-   * @example <caption> Logging in a user </caption>
+   * @example &lt;caption> Logging in a user &lt;/caption>
    * const conf = {
    * "appSource": "",
    * "appName": "",
@@ -162,7 +203,7 @@ function FivePaisaClient(conf) {
    * @method getHoldings
    * @memberOf FivePaisaClient
    * @returns {Array} Array containing holdings
-   * @example <caption>Fetching holdings</caption>
+   * @example &lt;caption>Fetching holdings&lt;/caption>
    * client.getHoldings().then((holdings) => {
    *    console.log(holdings)
    *  }).catch((err) => {
@@ -190,7 +231,7 @@ function FivePaisaClient(conf) {
    * @method getOrderBook
    * @memberOf FivePaisaClient
    * @returns {Array} Array containing orders
-   * @example <caption>Fetching orders</caption>
+   * @example &lt;caption>Fetching orders&lt;/caption>
    * client.getOrderBook().then((orders) => {
    *    console.log(orders)
    *  }).catch((err) => {
@@ -218,7 +259,7 @@ function FivePaisaClient(conf) {
    * @method getMargin
    * @memberOf FivePaisaClient
    * @returns {Array} Array containing margin details
-   * @example <caption>Fetching margin details</caption>
+   * @example &lt;caption>Fetching margin details&lt;/caption>
    * client.getMargin().then((marginDetails) => {
    *    console.log(marginDetails)
    *  }).catch((err) => {
@@ -246,7 +287,7 @@ function FivePaisaClient(conf) {
    * @method getPositions
    * @memberOf FivePaisaClient
    * @returns {Array} Array containing position details
-   * @example <caption>Fetching margins</caption>
+   * @example &lt;caption>Fetching margins&lt;/caption>
    * client.getPositions().then((positionDetails) => {
    *    console.log(positionDetails)
    *  }).catch((err) => {
@@ -485,3 +526,22 @@ module.exports = {
   FivePaisaClient: FivePaisaClient,
   OrderValidityEnum: OrderValidityEnum
 };
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<br class="clear">
+
+<footer>
+    Generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.5</a> on Mon Sep 07 2020 14:59:41 GMT+0530 (India Standard Time) using the Minami theme.
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/linenumber.js"></script>
+</body>
+</html>
