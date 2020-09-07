@@ -6,7 +6,8 @@
     "lint": "eslint --ext js,md .",
     "test": "jest",
     "precommit": "lint-staged",
-    "prepush": "jest"
+    "prepush": "jest",
+    "gendocs": "jsdoc --readme README.md --package package.json index.js const.js -d docs -t ./node_modules/minami/"
   },
   "dependencies": {
     "axios": "^0.19.2",
@@ -17,15 +18,16 @@
   "devDependencies": {
     "axios": "^0.19.2",
     "axios-cookiejar-support": "^1.0.0",
-    "tough-cookie": "^4.0.0",
     "eslint": "^4.11.0",
     "eslint-config-concise": "^0.15.0",
     "eslint-config-concise-jest": "^0.15.0",
     "husky": "^0.14.3",
     "jest": "^21.2.1",
     "lint-staged": "^5.0.0",
+    "minami": "^1.2.3",
     "npm-run-all": "^4.1.2",
-    "prettier-eslint-cli": "^4.4.0"
+    "prettier-eslint-cli": "^4.4.0",
+    "tough-cookie": "^4.0.0"
   },
   "repository": "5paisa/5paisajs",
   "license": "MIT",

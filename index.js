@@ -99,8 +99,8 @@ function FivePaisaClient(conf) {
    * @memberOf FivePaisaClient
    * @param {Object} response
    */
-  this.init = function(response) {
-    var promise = new Promise(function(resolve, reject) {
+  this.init = function (response) {
+    var promise = new Promise(function (resolve, reject) {
       if (response.data.body.ClientCode != "INVALID CODE") {
         console.log(GREEN, "Logged in");
         CLIENT_CODE = response.data.body.ClientCode;
@@ -147,7 +147,7 @@ function FivePaisaClient(conf) {
    * })
 
    */
-  this.login = function(email, password, DOB) {
+  this.login = function (email, password, DOB) {
     const encryptionKey = conf.encryptionKey;
     this.loginPayload.head.requestCode = LOGIN_REQUEST_CODE;
     this.loginPayload.body.Email_id = encrypt(encryptionKey, email);
@@ -169,11 +169,11 @@ function FivePaisaClient(conf) {
    *    console.log(err)
    *  });
    */
-  this.getHoldings = function() {
+  this.getHoldings = function () {
     this.genericPayload.head.requestCode = HOLDINGS_REQUEST_CODE;
     this.genericPayload.body.ClientCode = CLIENT_CODE;
     var payload = this.genericPayload;
-    var promise = new Promise(function(resolve, reject) {
+    var promise = new Promise(function (resolve, reject) {
       request_instance.post(HOLDINGS_ROUTE, payload).then(response => {
         if (response.data.body.Data.length === 0) {
           reject(response.data.body.Message);
@@ -197,11 +197,11 @@ function FivePaisaClient(conf) {
    *    console.log(err)
    *  });
    */
-  this.getOrderBook = function() {
+  this.getOrderBook = function () {
     this.genericPayload.head.requestCode = ORDER_BOOK_REQUEST_CODE;
     this.genericPayload.body.ClientCode = CLIENT_CODE;
     var payload = this.genericPayload;
-    var promise = new Promise(function(resolve, reject) {
+    var promise = new Promise(function (resolve, reject) {
       request_instance.post(ORDER_BOOK_ROUTE, payload).then(response => {
         if (response.data.body.OrderBookDetail.length === 0) {
           reject(response.data.body.Message);
@@ -225,11 +225,11 @@ function FivePaisaClient(conf) {
    *    console.log(err)
    *  });
    */
-  this.getMargin = function() {
+  this.getMargin = function () {
     this.genericPayload.head.requestCode = MARGIN_REQUEST_CODE;
     this.genericPayload.body.ClientCode = CLIENT_CODE;
     var payload = this.genericPayload;
-    var promise = new Promise(function(resolve, reject) {
+    var promise = new Promise(function (resolve, reject) {
       request_instance.post(MARGIN_ROUTE, payload).then(response => {
         if (response.data.body.EquityMargin.length === 0) {
           reject(response.data.body.Message);
@@ -253,11 +253,11 @@ function FivePaisaClient(conf) {
    *    console.log(err)
    *  });
    */
-  this.getPositions = function() {
+  this.getPositions = function () {
     this.genericPayload.head.requestCode = POSITIONS_REQUEST_CODE;
     this.genericPayload.body.ClientCode = CLIENT_CODE;
     var payload = this.genericPayload;
-    var promise = new Promise(function(resolve, reject) {
+    var promise = new Promise(function (resolve, reject) {
       request_instance.post(POSITIONS_ROUTE, payload).then(response => {
         if (response.data.body.NetPositionDetail.length === 0) {
           reject(response.data.body.Message);
@@ -269,13 +269,13 @@ function FivePaisaClient(conf) {
     return promise;
   };
 
-  this._order_request = function(orderType) {
+  this._order_request = function (orderType) {
     this.orderPayload.body.OrderFor = orderType;
     this.orderPayload.head.requestCode = ORDER_PLACEMENT_REQUEST_CODE;
     this.orderPayload.body.ClientCode = CLIENT_CODE;
     this.orderPayload.body.OrderRequesterCode = CLIENT_CODE;
     var payload = this.orderPayload;
-    var promise = new Promise(function(resolve, reject) {
+    var promise = new Promise(function (resolve, reject) {
       request_instance
         .post(ORDER_PLACEMENT_ROUTE, payload)
         .then(response => {
@@ -333,7 +333,7 @@ function FivePaisaClient(conf) {
    * @param {string} exchange - Exchange name. "N" - NSE, "B" - BSE
    * @param {OrderRequestParams} [params] - Parameters for placing complex orders
    */
-  this.placeOrder = function(orderType, scripCode, qty, exchange, params) {
+  this.placeOrder = function (orderType, scripCode, qty, exchange, params) {
     if (orderType === undefined) {
       throw new Error(
         `No orderType specified, valid order types are "BUY" and "SELL"`
@@ -393,7 +393,7 @@ function FivePaisaClient(conf) {
    * @param {number} tradedQty - The traded quantity for the scrip. Incorrect value would lead to order rejection.
    * @param {number} scripCode - Scrip code of the scrip.
    */
-  this.modifyOrder = function(exchangeOrderID, tradedQty, scripCode) {
+  this.modifyOrder = function (exchangeOrderID, tradedQty, scripCode) {
     this.orderPayload.body.ExchOrderID = exchangeOrderID;
     this.orderPayload.body.TradedQty = tradedQty;
     this.orderPayload.body.ScripCode = scripCode;
@@ -409,7 +409,7 @@ function FivePaisaClient(conf) {
    * @param {number} tradedQty - The traded quantity for the scrip. Incorrect value would lead to order rejection.
    * @param {number} scripCode - Scrip code of the scrip.
    */
-  this.cancelOrder = function(exchangeOrderID, tradedQty, scripCode) {
+  this.cancelOrder = function (exchangeOrderID, tradedQty, scripCode) {
     this.orderPayload.body.ExchOrderID = exchangeOrderID;
     this.orderPayload.body.TradedQty = tradedQty;
     this.orderPayload.body.ScripCode = scripCode;
@@ -418,7 +418,7 @@ function FivePaisaClient(conf) {
 
   /**
    * Gets the order status of the orders provided
-   * @method cancelOrder
+   * @method getOrderStatus
    * @memberOf FivePaisaClient
    * @returns {Object}
    * @param {Array} orderList - Array containing order details.
@@ -431,12 +431,12 @@ function FivePaisaClient(conf) {
    *  }
    * ]
    */
-  this.getOrderStatus = function(orderList) {
+  this.getOrderStatus = function (orderList) {
     this.genericPayload.head.requestCode = ORDER_STATUS_REQUEST_CODE;
     this.genericPayload.body.ClientCode = CLIENT_CODE;
     this.genericPayload.body.OrdStatusReqList = orderList;
     var payload = this.genericPayload;
-    var promise = new Promise(function(resolve, reject) {
+    var promise = new Promise(function (resolve, reject) {
       request_instance.post(ORDER_STATUS_ROUTE, payload).then(response => {
         if (response.data.body.OrdStatusResLst.length === 0) {
           reject({ err: "No info found" });
@@ -463,12 +463,12 @@ function FivePaisaClient(conf) {
    *  }
    * ]
    */
-  this.getTradeInfo = function(tradeDetailList) {
+  this.getTradeInfo = function (tradeDetailList) {
     this.genericPayload.head.requestCode = TRADE_INFO_REQUEST_CODE;
     this.genericPayload.body.ClientCode = CLIENT_CODE;
     this.genericPayload.body.TradeDetailList = tradeDetailList;
     var payload = this.genericPayload;
-    var promise = new Promise(function(resolve, reject) {
+    var promise = new Promise(function (resolve, reject) {
       request_instance.post(TRADE_INFO_ROUTE, payload).then(response => {
         if (response.data.body.TradeDetail.length === 0) {
           reject({ err: "No info found" });
