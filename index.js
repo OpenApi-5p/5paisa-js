@@ -293,6 +293,7 @@ function FivePaisaClient(conf) {
    * @typedef {Object} OrderRequestParams
    * @property {string} [exchangeSegment=C] - Exchange Segment. "C"- Cash, "D"- Derivative, "U" - Currency
    * @property {boolean} [atMarket=true] - true - For market order, false - For limit order
+   * @property {float} [price=0] - Price for limit order
    * @property {boolean} [isStopLossOrder=false] - true - For stoploss order, false - For regular order
    * @property {float} [stopLossPrice=0] - This will be the trigger price. This will be set when user want to place stop loss order. (For Buy Stop loss, Trigger price should not be greater than Limit Price.
    *                                 And for Sell Stop Loss Order Trigger Price should not be less than Limit Price)
@@ -375,6 +376,13 @@ function FivePaisaClient(conf) {
       this.orderPayload.body.AtMarket = params.atMarket;
     } else {
       this.orderPayload.body.AtMarket = defaultOrderParams.atMarket;
+    }
+    if (typeof params.price !== 'undefined') {
+      this.orderPayload.body.Price = params.price;
+      this.orderPayload.body.AtMarket = false;
+    } else {
+      this.orderPayload.body.Price = 0;
+      this.orderPayload.body.AtMarket = true;
     }
     this.orderPayload.body.TradedQty = 0;
     this.orderPayload.body.DisQty = params.DisQty || qty;
