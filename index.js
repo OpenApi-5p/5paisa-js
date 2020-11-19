@@ -371,9 +371,10 @@ function FivePaisaClient(conf) {
       params.ahPlaced || defaultOrderParams.ahPlaced;
     if (this.orderPayload.body.AHPlaced === "Y") {
       this.orderPayload.body.AtMarket = false;
+    } else if (typeof params.atMarket == "boolean") {
+      this.orderPayload.body.AtMarket = params.atMarket;
     } else {
-      this.orderPayload.body.AtMarket =
-        params.atMarket || defaultOrderParams.atMarket;
+      this.orderPayload.body.AtMarket = defaultOrderParams.atMarket;
     }
     this.orderPayload.body.TradedQty = 0;
     this.orderPayload.body.DisQty = params.DisQty || qty;
