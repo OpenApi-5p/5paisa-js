@@ -1,6 +1,6 @@
 {
   "name": "5paisajs",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "Javascript client for 5paisa APIs natively written in .NET",
   "scripts": {
     "lint": "eslint --ext js,md .",
