@@ -36,7 +36,7 @@ const RED = "\x1b[31m";
 function FivePaisaClient(conf) {
   // Routes
   const BASE_URL = "https://Openapi.5paisa.com/VendorsAPI/Service1.svc";
-  const LOGIN_ROUTE = `${BASE_URL}/V2/LoginRequestMobileNewbyEmail`;
+  const LOGIN_ROUTE = `${BASE_URL}/V3/LoginRequestMobileNewbyEmail`;
   const MARGIN_ROUTE = `${BASE_URL}/V3/Margin`;
   const ORDER_BOOK_ROUTE = `${BASE_URL}/V2/OrderBook`;
   const HOLDINGS_ROUTE = `${BASE_URL}/V2/Holding`;
@@ -53,7 +53,7 @@ function FivePaisaClient(conf) {
   const TRADE_INFO_REQUEST_CODE = `5PTrdInfo`;
   const ORDER_STATUS_REQUEST_CODE = `5POrdStatus`;
   const ORDER_PLACEMENT_REQUEST_CODE = `5POrdReq`;
-  const LOGIN_REQUEST_CODE = `5PLoginV2`;
+  const LOGIN_REQUEST_CODE = `5PLoginV3`;
   var CLIENT_CODE = null;
   this.loginPayload = loginPayload;
   this.loginPayload.head.appName = conf.appName;
@@ -82,7 +82,8 @@ function FivePaisaClient(conf) {
     isIntraday: false,
     ahPlaced: "N",
     IOCOrder: false,
-    orderValidity: OrderValidityEnum.Day
+    orderValidity: OrderValidityEnum.Day,
+    price: 0
   };
 
   // Request instance to be used throughout, with cookie support.
@@ -291,6 +292,7 @@ function FivePaisaClient(conf) {
   /**
    * Parameter object containing options to place complex orders.
    * @typedef {Object} OrderRequestParams
+   * @property {float} [price=0] - Rate at which you want to Buy / Sell the stock. (price=0 for at market order)
    * @property {string} [exchangeSegment=C] - Exchange Segment. "C"- Cash, "D"- Derivative, "U" - Currency
    * @property {boolean} [atMarket=true] - true - For market order, false - For limit order
    * @property {boolean} [isStopLossOrder=false] - true - For stoploss order, false - For regular order
@@ -354,6 +356,8 @@ function FivePaisaClient(conf) {
     this.orderPayload.body.OrderType = orderType;
     this.orderPayload.body.Qty = qty;
     this.orderPayload.body.ScripCode = scripCode;
+    this.orderPayload.body.Price =
+      params.price || defaultOrderParams.price;
     this.orderPayload.body.Exchange = exchange || defaultOrderParams.exchange;
     this.orderPayload.body.ExchangeType =
       params.exchangeSegment || defaultOrderParams.exchangeSegment;
