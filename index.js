@@ -8,7 +8,7 @@ const {
   orderPayload,
   OrderValidityEnum
 } = require("./const");
-const { encrypt } = require("./utils");
+const { AES128Encrypt, AES256Encrypt } = require("./utils");
 
 axiosCookieJarSupport(axios);
 
@@ -102,8 +102,8 @@ function FivePaisaClient(conf) {
    */
   this.init = function (response) {
     var promise = new Promise(function (resolve, reject) {
-      if (response.data.body.ClientCode != "INVALID CODE") {
-        console.log(GREEN, "Logged in");
+      if (response.data.body.Message == "") {
+        console.log(GREEN, `Logged in`);
         CLIENT_CODE = response.data.body.ClientCode;
         resolve();
       } else {
@@ -150,6 +150,10 @@ function FivePaisaClient(conf) {
    */
   this.login = function (email, password, DOB) {
     const encryptionKey = conf.encryptionKey;
+    let encrypt = AES256Encrypt;
+    if (encryptionKey.length == 32) {
+      encrypt = AES128Encrypt;
+    }
     this.loginPayload.head.requestCode = LOGIN_REQUEST_CODE;
     this.loginPayload.body.Email_id = encrypt(encryptionKey, email);
     this.loginPayload.body.Password = encrypt(encryptionKey, password);
