@@ -10,13 +10,13 @@
     "gendocs": "jsdoc --readme README.md --package package.json index.js const.js -d docs -t ./node_modules/minami/"
   },
   "dependencies": {
-    "axios": "^0.19.2",
+    "axios": "^0.21.1",
     "axios-cookiejar-support": "^1.0.0",
     "jsdoc": "^3.6.5",
     "tough-cookie": "^4.0.0"
   },
   "devDependencies": {
-    "axios": "^0.19.2",
+    "axios": "^0.21.1",
     "axios-cookiejar-support": "^1.0.0",
     "eslint": "^4.11.0",
     "eslint-config-concise": "^0.15.0",
