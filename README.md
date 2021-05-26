@@ -83,58 +83,130 @@ client.getPositions().then((positions) => {
 }).catch((err) => {
     console.log(err)
 });
-/*
-[
-  {
-    BodQty: 0,
-    BookedPL: 0,
-    BuyAvgRate: 2.15,
-    BuyQty: 2,
-    BuyValue: 4.3,
-    Exch: 'N',
-    ExchType: 'C',
-    LTP: 2.15,
-    MTOM: 0,
-    Multiplier: 1,
-    NetQty: 2,
-    OrderFor: 'D',
-    PreviousClose: 2.25,
-    ScripCode: 5831,
-    ScripName: 'XYZ',
-    SellAvgRate: 0,
-    SellQty: 0,
-    SellValue: 0
-  }
-]
-*/
+
 ```
 
-### Place cash order
+### Place  order
 
 ```js
-var options = {}
-try {
-      client.placeOrder("BUY", "11111", "1", "B", options).then((response) => {
-          console.log(response)
-        })
-    }
-catch (err) {
-    console.log(err)
-  }
+ var options = {
+            exchangeSegment: "C",
+            atMarket: false,
+            isStopLossOrder: false,
+            stopLossPrice: 0,
+            isVTD: false,
+            isIOCOrder: false,
+            isIntraday: false,
+            ahPlaced: "N",
+            IOCOrder: false,
+            price: 208
+        };
+        try {
+            client.placeOrder("BUY", "1660", "1", "N", options).then((response) => {
+                console.log(response)
+            })
+        } catch (err) {
+console.log(err)
+        }
 
-/*
-{
-  BrokerOrderID: 302493444,
-  ClientCode: '51882016',
-  Exch: 'N',
-  ExchOrderID: '',
-  ExchType: 'C',
-  LocalOrderID: 0,
-  Message: 'Success',
-  RMSResponseCode: 0,
-  ScripCode: 11111,
-  Status: 0,
-  Time: '/Date(1598812200000+0530)/'
-}
-*/
+```
+
+### Modify order
+
+```js
+    client.modifyOrder("1100000007628729", "1", "210", "1660", false, "N", "C", true).then((response) => {
+            console.log(response)
+        })
+    } ).catch((err) => {
+        console.log(err)
+    });
+```
+
+### Cancel Order
+
+```js
+ client.cancelOrder("1100000007973827", "1", "205", "1660", false, "N", "C", false).then((response) => {
+            console.log(response)
+        })
+    } ).catch((err) => {
+        console.log(err)
+    });
+```
+
+### Place BO-CO Order
+
+```js
+var a={
+           
+        }
+    client.bocoorder(1660,1,205,0,217,'B','N','C','P',200,a).then((Response)=>{
+            console.log(Response)
+        }).catch((err)=>{
+            console.log(err)
+        })
+// Note : For Cover order par Order_for='c'
+
+```
+
+### Modified Bo-Co Order
+```js
+var a={
+            "ExchOrderId":"1100000008193800",
+            
+        }
+    client.bocoorder(1660,1,205,0,217,'B','N','C','M',200,a).then((Response)=>{
+            console.log(Response)
+        }).catch((err)=>{
+            console.log(err)
+        })
+        
+   // Note : We Can not Modify Target And Stoploss legs
+```
+### Modify legs of Executed Bo-Co Order
+```js
+var ab={
+        "price":215
+    }
+    
+     client.Mod_bo_order('S',1660,1,"N","1100000008697274",ab).then((Response)=>{
+                console.log(Response)
+            }).catch((err)=>{
+                console.log(err)
+            })
+    // Note : This is for modify profit order.
+    
+    var ab={
+         
+        "isStopLossOrder":true,
+        "stopLossPrice":205,
+        "isIntraday":true,
+        "atMarket": true
+        
+    }
+    
+     client.Mod_bo_order('S',1660,1,"N","1100000008697274",ab).then((Response)=>{
+                console.log(Response)
+            }).catch((err)=>{
+                console.log(err)
+            })
+     // Note : this is for modify stoploss order.
+```
+### MarketFeed 
+```js
+a=[
+    {
+    "Exch":"N",
+    "ExchType":"D",
+    "Symbol":"NIFTY 27 MAY 2021 CE 14500.00",
+    "Expiry":"20210527",
+    "StrikePrice":"14500",
+    "OptionType":"CE"
+}]
+
+
+client.getMarketFeed(a).then((response) => {
+            console.log(response)
+        }).catch((err) => {
+            console.log(err)
+        });
 ```
