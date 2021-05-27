@@ -662,7 +662,7 @@ function FivePaisaClient(conf) {
   
   this.getMarketFeed = function (reqlist) {
     
-    console.log(listdata)
+    
     this.marketpayload.body.Count = CLIENT_CODE;
     this.marketpayload.body.MarketFeedData=reqlist;
     
