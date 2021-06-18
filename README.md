@@ -224,5 +224,7 @@ client.getMarketFeed(a).then((response) => {
 
 ### Historical Data
 ```js
-a=client.historicalData('n', 'c', '1660', '51m','2021-05-31', '2021-06-01')
+a=client.historicalData('n', 'c', '1660', '1m','2021-05-31', '2021-06-01')
+
+Note: Timeframe should be from this list ['1m','5m','10m','15m','30m','60m','1d']
 ```
