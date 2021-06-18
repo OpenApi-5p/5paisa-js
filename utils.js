@@ -27,7 +27,7 @@ const AES256Encrypt = (key, text) => {
 
     let encrypted = cipher.update(text, "utf8", "base64");
     encrypted += cipher.final("base64");
-    // console.log(encrypted);
+    
     return encrypted;
   } catch (error) {
     console.log(error, "error in encrypt");
