@@ -210,3 +210,19 @@ client.getMarketFeed(a).then((response) => {
             console.log(err)
         });
 ```
+
+### MarketDepth
+
+```js
+ a=[{"Exchange":"N","ExchangeType":"D","ScripCode":"51440"},{"Exchange":"N","ExchangeType":"C","ScripCode":"1660"}]
+     client.getmarketdepth(a).then((response) => {
+                    console.log(response)
+                }).catch((err) => {
+                    console.log(err)
+                });
+```
+
+### Historical Data
+```js
+a=client.historicalData('n', 'c', '1660', '51m','2021-05-31', '2021-06-01')
+```
