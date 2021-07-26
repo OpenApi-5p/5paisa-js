@@ -1,6 +1,6 @@
 {
   "_from": "5paisajs",
-  "_id": "5paisajs@0.0.11",
+  "_id": "5paisajs@0.0.12",
   "_inBundle": false,
   "_integrity": "sha512-OAYM3ESOSevnx6o2jOtJvLLN61v8elqsG7AECceSSpKqceHZW+UwgKMVEyzGVkHjHDfmE/nkVRcPIc/IoifIYQ==",
   "_location": "/5paisajs",
@@ -88,5 +88,5 @@
     "prepush": "jest",
     "test": "jest"
   },
-  "version": "0.0.11"
+  "version": "0.0.12"
 }
