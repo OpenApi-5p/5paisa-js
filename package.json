@@ -33,7 +33,8 @@
     "jsdoc": "^3.6.5",
     "tough-cookie": "^4.0.0",
     "request" : "^2.88.2",
-    "node-pandas" : "^1.0.5"
+    "node-pandas" : "^1.0.5",
+    "table": "^6.7.1"
   },
   "deprecated": false,
   "description": "Javascript client for 5paisa APIs natively written in .NET",
