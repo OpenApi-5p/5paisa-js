@@ -1,0 +1,93 @@
+{
+  "_from": "5paisajs",
+  "_id": "5paisajs@0.0.14",
+  "_inBundle": false,
+  "_integrity": "sha512-OAYM3ESOSevnx6o2jOtJvLLN61v8elqsG7AECceSSpKqceHZW+UwgKMVEyzGVkHjHDfmE/nkVRcPIc/IoifIYQ==",
+  "_location": "/5paisajs",
+  "_phantomChildren": {},
+  "_requested": {
+    "type": "tag",
+    "registry": true,
+    "raw": "5paisajs",
+    "name": "5paisajs",
+    "escapedName": "5paisajs",
+    "rawSpec": "",
+    "saveSpec": null,
+    "fetchSpec": "latest"
+  },
+  "_requiredBy": [
+    "#USER",
+    "/"
+  ],
+  "_resolved": "https://registry.npmjs.org/5paisajs/-/5paisajs-0.0.7.tgz",
+  "_shasum": "7b71893cda6fdd462d613e82cb9138f8cee9048c",
+  "_spec": "5paisajs",
+  "_where": "C:\\Users\\keltus_jenish.s\\Desktop\\nodelogin",
+  "bugs": {
+    "url": "https://github.com/5paisa/5paisajs/issues"
+  },
+  "bundleDependencies": false,
+  "dependencies": {
+    "axios": "^0.19.2",
+    "axios-cookiejar-support": "^1.0.0",
+    "jsdoc": "^3.6.5",
+    "tough-cookie": "^4.0.0",
+    "request" : "^2.88.2",
+    "node-pandas" : "^1.0.5"
+    
+  },
+  "deprecated": false,
+  "description": "Javascript client for 5paisa APIs natively written in .NET",
+  "devDependencies": {
+    "axios": "^0.19.2",
+    "axios-cookiejar-support": "^1.0.0",
+    "eslint": "^4.11.0",
+    "eslint-config-concise": "^0.15.0",
+    "eslint-config-concise-jest": "^0.15.0",
+    "husky": "^0.14.3",
+    "jest": "^21.2.1",
+    "lint-staged": "^5.0.0",
+    "minami": "^1.2.3",
+    "npm-run-all": "^4.1.2",
+    "prettier-eslint-cli": "^4.4.0",
+    "tough-cookie": "^4.0.0"
+  },
+  "engines": {
+    "node": ">=6"
+  },
+  "files": [
+    "*.md",
+    "index.js",
+    "utils.js",
+    "const.js"
+  ],
+  "homepage": "https://github.com/5paisa/5paisajs#readme",
+  "keywords": [
+    "5paisa-trading-apis",
+    "trading-api",
+    "nodejs",
+    "trading",
+    "algo"
+  ],
+  "license": "MIT",
+  "lint-staged": {
+    "*.js": [
+      "prettier-eslint --write",
+      "eslint --fix",
+      "git add"
+    ]
+  },
+  "name": "5paisajs",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/5paisa/5paisajs.git"
+  },
+  "scripts": {
+    "gendocs": "jsdoc --readme README.md --package package.json index.js const.js -d docs -t ./node_modules/minami/",
+    "lint": "eslint --ext js,md .",
+    "precommit": "lint-staged",
+    "prepush": "jest",
+    "test": "jest"
+  },
+  "version": "0.0.14"
+}
