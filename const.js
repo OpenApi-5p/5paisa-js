@@ -80,6 +80,7 @@ const ORDER_PLACEMENT_PAYLOAD = {
     OrderID: 0,
     OrderType: "BUY",
     Qty: 0,
+    RemoteOrderID: "1",
     UniqueOrderID: "1",
     DisQty: 0,
     IsStopLossOrder: false,
