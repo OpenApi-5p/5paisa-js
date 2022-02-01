@@ -463,6 +463,7 @@ function FivePaisaClient(conf) {
     this.orderPayload.body.IsAHOrder =
         params.ahPlaced || defaultOrderParams.ahPlaced;
     this.orderPayload.body.DisQty = params.DisQty || qty;
+    this.orderPayload.body.RemoteOrderID = params.RemoteOrderID;
     return this._order_request("P");
   };
   this.bocoorder =function(scrip_code, Qty,LimitPriceInitialOrder,TriggerPriceInitialOrder
