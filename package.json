@@ -26,24 +26,24 @@
   "bugs": {
     "url": "https://github.com/5paisa/5paisajs/issues"
   },
-  "bundleDependencies": false,
+  "bundleDependencies": [],
   "dependencies": {
     "axios": "^0.19.2",
     "axios-cookiejar-support": "^1.0.0",
     "jsdoc": "^3.6.5",
-    "tough-cookie": "^4.0.0",
-    "request" : "^2.88.2",
-    "node-pandas" : "^1.0.5"
-    
+    "node-pandas": "^1.0.5",
+    "request": "^2.88.2",
+    "tough-cookie": "^4.0.0"
   },
   "deprecated": false,
   "description": "Javascript client for 5paisa APIs natively written in .NET",
   "devDependencies": {
     "axios": "^0.19.2",
     "axios-cookiejar-support": "^1.0.0",
-    "eslint": "^4.11.0",
+    "eslint": "^8.42.0",
     "eslint-config-concise": "^0.15.0",
     "eslint-config-concise-jest": "^0.15.0",
+    "eslint-config-google": "^0.14.0",
     "husky": "^0.14.3",
     "jest": "^21.2.1",
     "lint-staged": "^5.0.0",
@@ -87,7 +87,9 @@
     "lint": "eslint --ext js,md .",
     "precommit": "lint-staged",
     "prepush": "jest",
-    "test": "jest"
+    "test": "jest",
+    "start": "nodemon new.js",
+    "eslint": "eslint --fix ./"
   },
   "version": "0.0.14"
 }
