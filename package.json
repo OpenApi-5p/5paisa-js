@@ -19,12 +19,12 @@
     "#USER",
     "/"
   ],
-  "_resolved": "https://registry.npmjs.org/5paisajs/-/5paisajs-0.0.7.tgz",
+  "_resolved": "https://registry.npmjs.org/5paisajs/-/5paisajs-0.0.9.tgz",
   "_shasum": "7b71893cda6fdd462d613e82cb9138f8cee9048c",
   "_spec": "5paisajs",
   "_where": "C:\\Users\\keltus_jenish.s\\Desktop\\nodelogin",
   "bugs": {
-    "url": "https://github.com/5paisa/5paisajs/issues"
+    "url": "https://github.com/OpenApi-5p/5paisajs/issues"
   },
   "bundleDependencies": [],
   "dependencies": {
@@ -80,7 +80,7 @@
   "name": "5paisajs",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/5paisa/5paisajs.git"
+    "url": "git+https://github.com/OpenApi-5p/5paisajs.git"
   },
   "scripts": {
     "gendocs": "jsdoc --readme README.md --package package.json index.js const.js -d docs -t ./node_modules/minami/",
@@ -91,5 +91,5 @@
     "start": "nodemon new.js",
     "eslint": "eslint --fix ./"
   },
-  "version": "0.0.14"
+  "version": "0.0.20"
 }

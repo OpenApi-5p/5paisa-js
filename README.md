@@ -21,39 +21,42 @@ Get your API keys from https://www.5paisa.com/DeveloperAPI/APIKeys
 ```js
 // Configuration for your app
 const conf = {
-    "appSource": "",
-    "appName": "",
-    "userId": "",
-    "password": "",
-    "userKey": "",
-    "encryptionKey": ""
-}
+  appSource: "",
+  appName: "",
+  userId: "",
+  password: "",
+  userKey: "",
+  encryptionKey: ""
+};
 
-const { FivePaisaClient } = require("5paisajs")
+const { FivePaisaClient } = require("5paisajs");
 
-var client = new FivePaisaClient(conf)
+var client = new FivePaisaClient(conf);
 
 // This client object can be used to login multiple users.
-client.login("random_email@xyz.com", "password", "YYYYMMDD").then((response) => {
-    client.init(response).then(() => {
-        // Fetch holdings, positions or place orders here.
-        // Some things to try out are given below.
-    })
-}).catch((err) =>{
+client
+  .get_TOTP_Session("Client code", "TOTP", "PIN")
+  .then(response => {
+    // Fetch holdings, positions or place orders here.
+    // Some things to try out are given below.
+  })
+  .catch(err => {
     // Oh no :/
-    console.log(err)
-})
-
+    console.log(err);
+  });
 ```
 
 ### Fetch Holdings
 
 ```js
-client.getHoldings().then((holdings) => {
-    console.log(holdings)
-}).catch((err) => {
-    console.log(err)
-});
+client
+  .getHoldings()
+  .then(holdings => {
+    console.log(holdings);
+  })
+  .catch(err => {
+    console.log(err);
+  });
 
 /*
 [
@@ -78,37 +81,38 @@ client.getHoldings().then((holdings) => {
 ### Fetch Positions
 
 ```js
-client.getPositions().then((positions) => {
-    console.log(positions)
-}).catch((err) => {
-    console.log(err)
-});
-
+client
+  .getPositions()
+  .then(positions => {
+    console.log(positions);
+  })
+  .catch(err => {
+    console.log(err);
+  });
 ```
 
-### Place  order
+### Place order
 
 ```js
- var options = {
-            exchangeSegment: "C",
-            atMarket: false,
-            isStopLossOrder: false,
-            stopLossPrice: 0,
-            isVTD: false,
-            isIOCOrder: false,
-            isIntraday: false,
-            ahPlaced: "N",
-            IOCOrder: false,
-            price: 208
-        };
-        try {
-            client.placeOrder("BUY", "1660", "1", "N", options).then((response) => {
-                console.log(response)
-            })
-        } catch (err) {
-console.log(err)
-        }
-
+var options = {
+  exchangeSegment: "C",
+  atMarket: false,
+  isStopLossOrder: false,
+  stopLossPrice: 0,
+  isVTD: false,
+  isIOCOrder: false,
+  isIntraday: false,
+  ahPlaced: "N",
+  IOCOrder: false,
+  price: 208
+};
+try {
+  client.placeOrder("BUY", "1660", "1", "N", options).then(response => {
+    console.log(response);
+  });
+} catch (err) {
+  console.log(err);
+}
 ```
 
 ### Modify order
@@ -136,96 +140,117 @@ console.log(err)
 ### Place BO-CO Order
 
 ```js
-var a={
-           
-        }
-    client.bocoorder(1660,1,205,0,217,'B','N','C','P',200,a).then((Response)=>{
-            console.log(Response)
-        }).catch((err)=>{
-            console.log(err)
-        })
+var a = {};
+client
+  .bocoorder(1660, 1, 205, 0, 217, "B", "N", "C", "P", 200, a)
+  .then(Response => {
+    console.log(Response);
+  })
+  .catch(err => {
+    console.log(err);
+  });
 // Note : For Cover order par Order_for='c'
-
 ```
 
 ### Modified Bo-Co Order
+
 ```js
-var a={
-            "ExchOrderId":"1100000008193800",
-            
-        }
-    client.bocoorder(1660,1,205,0,217,'B','N','C','M',200,a).then((Response)=>{
-            console.log(Response)
-        }).catch((err)=>{
-            console.log(err)
-        })
-        
-   // Note : We Can not Modify Target And Stoploss legs
+var a = {
+  ExchOrderId: "1100000008193800"
+};
+client
+  .bocoorder(1660, 1, 205, 0, 217, "B", "N", "C", "M", 200, a)
+  .then(Response => {
+    console.log(Response);
+  })
+  .catch(err => {
+    console.log(err);
+  });
+
+// Note : We Can not Modify Target And Stoploss legs
 ```
+
 ### Modify legs of Executed Bo-Co Order
+
 ```js
-var ab={
-        "price":215
-    }
-    
-     client.Mod_bo_order('S',1660,1,"N","1100000008697274",ab).then((Response)=>{
-                console.log(Response)
-            }).catch((err)=>{
-                console.log(err)
-            })
-    // Note : This is for modify profit order.
-    
-    var ab={
-         
-        "isStopLossOrder":true,
-        "stopLossPrice":205,
-        "isIntraday":true,
-        "atMarket": true
-        
-    }
-    
-     client.Mod_bo_order('S',1660,1,"N","1100000008697274",ab).then((Response)=>{
-                console.log(Response)
-            }).catch((err)=>{
-                console.log(err)
-            })
-     // Note : this is for modify stoploss order.
+var ab = {
+  price: 215
+};
+
+client
+  .Mod_bo_order("S", 1660, 1, "N", "1100000008697274", ab)
+  .then(Response => {
+    console.log(Response);
+  })
+  .catch(err => {
+    console.log(err);
+  });
+// Note : This is for modify profit order.
+
+var ab = {
+  isStopLossOrder: true,
+  stopLossPrice: 205,
+  isIntraday: true,
+  atMarket: true
+};
+
+client
+  .Mod_bo_order("S", 1660, 1, "N", "1100000008697274", ab)
+  .then(Response => {
+    console.log(Response);
+  })
+  .catch(err => {
+    console.log(err);
+  });
+// Note : this is for modify stoploss order.
 ```
-### MarketFeed 
+
+### MarketFeed
+
 ```js
-a=[
-    {
-    "Exch":"N",
-    "ExchType":"D",
-    "Symbol":"NIFTY 27 MAY 2021 CE 14500.00",
-    "Expiry":"20210527",
-    "StrikePrice":"14500",
-    "OptionType":"CE"
-}]
+a = [
+  {
+    Exch: "N",
+    ExchType: "D",
+    Symbol: "NIFTY 27 MAY 2021 CE 14500.00",
+    Expiry: "20210527",
+    StrikePrice: "14500",
+    OptionType: "CE"
+  }
+];
 
-
-client.getMarketFeed(a).then((response) => {
-            console.log(response)
-        }).catch((err) => {
-            console.log(err)
-        });
+client
+  .getMarketFeed(a)
+  .then(response => {
+    console.log(response);
+  })
+  .catch(err => {
+    console.log(err);
+  });
 ```
 
 ### MarketDepth
 
 ```js
- a=[{"Exchange":"N","ExchangeType":"D","ScripCode":"51440"},{"Exchange":"N","ExchangeType":"C","ScripCode":"1660"}]
-     client.getmarketdepth(a).then((response) => {
-                    console.log(response)
-                }).catch((err) => {
-                    console.log(err)
-                });
+a = [
+  { Exchange: "N", ExchangeType: "D", ScripCode: "51440" },
+  { Exchange: "N", ExchangeType: "C", ScripCode: "1660" }
+];
+client
+  .getmarketdepth(a)
+  .then(response => {
+    console.log(response);
+  })
+  .catch(err => {
+    console.log(err);
+  });
 ```
 
 ### Historical Data
+
 ```js
 // historicalData(<Exchange>,<Exchange Type>,<Scrip Code>,<Time Frame>,<From Data>,<To Date>)
-a=client.historicalData('n', 'c', '1660', '1m','2021-05-31', '2021-06-01')
+a = client.historicalData("n", "c", "1660", "1m", "2021-05-31", "2021-06-01");
 
 //Note: Timeframe should be from this list ['1m','5m','10m','15m','30m','60m','1d']
 ```
