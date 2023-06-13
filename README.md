@@ -97,7 +97,6 @@ client
 var options = {
   exchangeSegment: "C",
   atMarket: false,
-  isStopLossOrder: false,
   stopLossPrice: 0,
   isVTD: false,
   isIOCOrder: false,
