@@ -16,7 +16,7 @@ Docs are hosted at https://5paisa.github.io/5paisa-js/
 
 ### Authentication
 
-Get your API keys from https://www.5paisa.com/DeveloperAPI/APIKeys
+Get your API keys from [https://www.5paisa.com/DeveloperAPI/APIKeys](https://tradestation.5paisa.com/apidoc)
 
 ```js
 // Configuration for your app
