@@ -128,9 +128,6 @@ function FivePaisaClient(conf) {
   this.accessTokenPayload.body.EncryKey = conf.encryptionKey;
   this.accessTokenPayload.body.UserId = conf.userId;
 
-  // let jwttoken = "";
-
-  // let requesttoken = "";
 
   let jwttoken = '';
 
@@ -193,79 +190,6 @@ function FivePaisaClient(conf) {
     return promise;
   };
 
-  /**
-   * Logs in the client.
-   * @method login
-   * @memberOf FivePaisaClient
-   * @param {string} email - Client's email
-   * @param {string} password - Client's password
-   * @param {string} DOB - Client's DOB in YYYYMMDD format
-   * @example <caption> Logging in a user </caption>
-   * const conf = {
-   * "appSource": "",
-   * "appName": "",
-   * "userId": "",
-   * "password": "",
-   * "userKey": "",
-   * "encryptionKey": ""
-   * }
-
-   * const { FivePaisaClient} = require("5paisajs")
-   *
-   * var client = new FivePaisaClient(conf)
-   *
-   * // This client object can be used to login multiple users.
-   * client.login("random_email@xyz.com", "password", "YYYYMMDD").then((response) => {
-   *     client.init(response).then(() => {
-   *         // Fetch holdings, positions or place orders here.
-   *         // See following examples.
-   *     })
-   * }).catch((err) =>{
-   *     // Oh no :/
-   *     console.log(err)
-   * })
-
-   */
-  this.login = function(email, password, DOB) {
-    const encryptionKey = conf.encryptionKey;
-    const encrypt = AES256Encrypt;
-
-    this.loginPayload.head.requestCode = LOGIN_REQUEST_CODE;
-    this.loginPayload.body.Email_id = encrypt(encryptionKey, email);
-    this.loginPayload.body.Password = encrypt(encryptionKey, password);
-    this.loginPayload.body.My2PIN = encrypt(encryptionKey, DOB);
-
-    const req = request_instance.post(LOGIN_ROUTE, loginPayload);
-
-    return req;
-  };
-
-  // function get_access_token(requesttoken)
-  // this.get_access_token = function (requesttoken) {
-  //   try {
-  //     // console.log(requesttoken, "++++++++");
-  //     this.accessTokenPayload.body.RequestToken = requesttoken;
-  //     // console.log(accessTokenPayload, "*****");
-
-  //     var promise = new Promise(function (resolve, reject) {
-  //       request_instance.post(ACCESS_TOKEN_ROUTE, accessTokenPayload).then(response => {
-  //         // console.log('======================', response);
-  //         if (response?.data?.body?.AccessToken || response.data.body.AccessToken === null || response.data.body.AccessToken === "") {
-  //           reject(response.data.body.AccessToken);
-  //         } else {
-  //           accesstoken = response.data.body.AccessToken;
-  //           resolve(response.data.body.AccessToken);
-  //         }
-
-  //       });
-  //     });
-  //     return promise;
-
-  //   }
-  //   catch (err) {
-  //     console.error(err);
-  //   }
-  // }
   this.get_access_token = function(requesttoken) {
     try {
       this.accessTokenPayload.body.RequestToken = requesttoken;
@@ -315,35 +239,6 @@ function FivePaisaClient(conf) {
     }
   };
 
-  // this.get_TOTP_Session('Your ClientCode','TOTP from authenticator app','Your MPin'){
-
-  // this.get_request_token = function (clientCode, totp, pin) {
-
-  //   this.totpPayload.body.Email_ID = clientCode;
-  //   this.totpPayload.body.TOTP = totp;
-  //   this.totpPayload.body.PIN = pin;
-  //   try {
-  //     var promise = new Promise(function (resolve, reject) {
-  //       request_instance.post(TOTP_ROUTE, totpPayload).then(response => {
-  //         // console.log(response);
-  //         if (response.data.body.RequestToken === null) {
-  //           reject(response.data.body.RequestToken);
-  //         } else {
-  //           // console.log(requesttoken, "*****************");
-  //           requesttoken = response.data.body.RequestToken;
-  //           // console.log(requesttoken, "------------------");
-  //           resolve(response.data.body.RequestToken);
-  //         }
-
-  //       });
-  //     });
-  //     return promise;
-  //   }
-  //   catch (err) {
-  //     console.error(err);
-  //   }
-
-  // };
 
   this.get_request_token = function(clientCode, totp, pin) {
     CLIENT_CODE = clientCode;
@@ -356,7 +251,6 @@ function FivePaisaClient(conf) {
           if (response.data.body.RequestToken === null) {
             reject(response.data.body.RequestToken);
           } else {
-            requesttoken = response.data.body.RequestToken;
             resolve(response.data.body.RequestToken);
           }
         });
