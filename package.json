@@ -1,8 +1,8 @@
 {
   "_from": "5paisajs",
-  "_id": "5paisajs@0.0.14",
+  "_id": "5paisajs@0.0.21",
   "_inBundle": false,
-  "_integrity": "sha512-OAYM3ESOSevnx6o2jOtJvLLN61v8elqsG7AECceSSpKqceHZW+UwgKMVEyzGVkHjHDfmE/nkVRcPIc/IoifIYQ==",
+  "_integrity": "sha512-1+dTEZiWVG3mpu6xkyIUCSqFSr0zoUsBXTJ7VmpKKc7HiTwi6VLRqE+hR3hHsyDcHBPWsOqbsflTnTIto/GCBw==",
   "_location": "/5paisajs",
   "_phantomChildren": {},
   "_requested": {
@@ -19,14 +19,14 @@
     "#USER",
     "/"
   ],
-  "_resolved": "https://registry.npmjs.org/5paisajs/-/5paisajs-0.0.9.tgz",
-  "_shasum": "7b71893cda6fdd462d613e82cb9138f8cee9048c",
+  "_resolved": "https://registry.npmjs.org/5paisajs/-/5paisajs-0.0.21.tgz",
+  "_shasum": "aa7364bbfb165b4e8e61f2680949bf371d713a05",
   "_spec": "5paisajs",
-  "_where": "C:\\Users\\keltus_jenish.s\\Desktop\\nodelogin",
+  "_where": "/Users/C223629/Desktop/Derivative/testing-5p",
   "bugs": {
     "url": "https://github.com/OpenApi-5p/5paisajs/issues"
   },
-  "bundleDependencies": [],
+  "bundleDependencies": false,
   "dependencies": {
     "axios": "^0.19.2",
     "axios-cookiejar-support": "^1.0.0",
@@ -83,13 +83,13 @@
     "url": "git+https://github.com/OpenApi-5p/5paisajs.git"
   },
   "scripts": {
+    "eslint": "eslint --fix ./",
     "gendocs": "jsdoc --readme README.md --package package.json index.js const.js -d docs -t ./node_modules/minami/",
     "lint": "eslint --ext js,md .",
     "precommit": "lint-staged",
     "prepush": "jest",
-    "test": "jest",
     "start": "nodemon new.js",
-    "eslint": "eslint --fix ./"
+    "test": "jest"
   },
-  "version": "0.0.21"
+  "version": "0.0.22"
 }

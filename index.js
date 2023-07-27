@@ -40,32 +40,22 @@ const RED = '\x1b[31m';
 
  */
 
-// const FivePaisaClient = require("5paisajs");
-// const conf = {
-//   "appSource": "",
-//   "appName": "",
-//   "userId": "",
-//   "password": "",
-//   "userKey": "",
-//   "encryptionKey": ""
-// }
-
 function FivePaisaClient(conf) {
   // Routes
   const BASE_URL = 'https://Openapi.5paisa.com/VendorsAPI/Service1.svc';
   const MARGIN_ROUTE = `${BASE_URL}/V4/Margin`;
-  const ORDER_BOOK_ROUTE = `${BASE_URL}/V3/OrderBook`;
+  const ORDER_BOOK_ROUTE = `${BASE_URL}/V2/OrderBook`;
   const HOLDINGS_ROUTE = `${BASE_URL}/V3/Holding`;
-  const POSITIONS_ROUTE = `${BASE_URL}/V2/NetPositionNetWise`;
+  const POSITIONS_ROUTE = `${BASE_URL}/V1/NetPositionNetWise`;
   const ORDER_PLACEMENT_ROUTE = `${BASE_URL}/V1/PlaceOrderRequest`;
-  const ORDER_MODIFY_ROUTE = `${BASE_URL}/ModifyOrderRequest`;
-  const ORDER_CANCEL_ROUTE = `${BASE_URL}/CancelOrderRequest`;
+  const ORDER_MODIFY_ROUTE = `${BASE_URL}/V1/ModifyOrderRequest`;
+  const ORDER_CANCEL_ROUTE = `${BASE_URL}/V1/CancelOrderRequest`;
   const ORDER_STATUS_ROUTE = `${BASE_URL}/V2/OrderStatus`;
   const TRADE_INFO_ROUTE = `${BASE_URL}/V1/TradeInformation`;
   const BO_CO_ROUTE = `${BASE_URL}/SMOOrderRequest`;
   const BO_MOD_ROUTE = `${BASE_URL}/ModifySMOOrder`;
   const WEBSOCKET_ROUTE = `https://openfeed.5paisa.com/Feeds/api/UserActivity/LoginCheck`;
-  const Market_ROUTE = `${BASE_URL}/MarketFeed`;
+  const Market_ROUTE = `${BASE_URL}/V1//MarketFeed`;
   const MARKET_DEPTH_ROUTE = `${BASE_URL}/MarketDepth`;
   const IDEAS_ROUTE = `${BASE_URL}/TraderIDEAs`;
   const TOTP_ROUTE = `${BASE_URL}/TOTPLogin`;
@@ -445,7 +435,6 @@ function FivePaisaClient(conf) {
     } else if (orderType === 'C') {
       this.genericPayload.head.requestCode = ORDER_CANCEL_REQUEST_CODE;
       requrl = ORDER_CANCEL_ROUTE;
-      this.genericPayload.body.ClientCode = CLIENT_CODE;
       payload = this.genericPayload;
     } else {
       throw new Error('No Such orderType specified');
@@ -726,33 +715,17 @@ function FivePaisaClient(conf) {
    * @param {string} exchange_type - exchange type you want to trade.
    * @param {object} [params] - Parameters for placing complex orders
    */
-  // this.modifyOrder = function (exchangeOrderID, tradedQty, scripCode) {
-  //   this.orderPayload.body.ExchOrderID = exchangeOrderID;
-  //   this.orderPayload.body.TradedQty = tradedQty;
-  //   this.orderPayload.body.ScripCode = scripCode;
-  //   return this._order_request("M");
-  // };
   this.modifyOrder = function(
-      exchangeOrderID,
-      Qty,
-      Price,
-      is_intraday,
-      exchange,
-      exchange_type,
-      params,
+      modify_params
   ) {
-    this.orderPayload.body.ExchOrderID = exchangeOrderID;
-    this.orderPayload.body.Qty = Qty;
-    this.orderPayload.body.Price = Price;
-    if (params.scripCode === undefined) {
-      this.orderPayload.body.ScripData = params.scripData;
-    } else {
-      this.orderPayload.body.ScripCode = params.scripCode;
-    }
+    this.orderPayload.body.ExchOrderID = modify_params.exchangeOrderID;
+    this.orderPayload.body.Qty = modify_params.Qty;
+    this.orderPayload.body.Price = modify_params.Price;
+ 
 
-    this.orderPayload.body.IsIntraday = is_intraday;
-    this.orderPayload.body.Exchange = exchange;
-    this.orderPayload.body.ExchangeType = exchange_type;
+    this.orderPayload.body.IsIntraday = modify_params.is_intraday;
+    this.orderPayload.body.Exchange = modify_params.exchange;
+    this.orderPayload.body.ExchangeType = modify_params.exchange_type;
 
     return this._order_request('M');
   };
@@ -766,14 +739,12 @@ function FivePaisaClient(conf) {
    * @param {string} exchange - Exchange
    * @param {string} exchange_type - exchange type you want to trade.
    */
-  this.cancelOrder = function(exchangeOrderID, exchange, exchange_type) {
+  this.cancelOrder = function(exchangeOrderID) {
     this.genericPayload.body.ExchOrderID = exchangeOrderID;
-    this.genericPayload.body.Exchange = exchange;
-    this.genericPayload.body.ExchangeType = exchange_type;
-    this.genericPayload.body.AppSource = conf.appSource;
 
     return this._order_request('C');
   };
+  
 
   /**
    * Gets the order status of the orders provided
