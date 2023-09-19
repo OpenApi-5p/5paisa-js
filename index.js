@@ -584,6 +584,7 @@ function FivePaisaClient(conf) {
    * @property {float} [price=0] - Rate at which you want to Buy / Sell the stock. (price=0 for at market order)
    * @property {string} [exchangeSegment=C] - Exchange Segment. "C"- Cash, "D"- Derivative, "U" - Currency
    * @property {boolean} [atMarket=true] - true - For market order, false - For limit order
+   * @property {float} [price=0] - Price for limit order
    * @property {boolean} [isStopLossOrder=false] - true - For stoploss order, false - For regular order
    * @property {float} [stopLossPrice=0] - This will be the trigger price. This will be set when user want to place stop loss order. (For Buy Stop loss, Trigger price should not be greater than Limit Price.
    *                                 And for Sell Stop Loss Order Trigger Price should not be less than Limit Price)
@@ -786,9 +787,17 @@ function FivePaisaClient(conf) {
       params.ahPlaced || defaultOrderParams.ahPlaced;
     if (this.orderPayload.body.AHPlaced === 'Y') {
       this.orderPayload.body.AtMarket = false;
+    } else if (typeof params.atMarket == "boolean") {
+      this.orderPayload.body.AtMarket = params.atMarket;
     } else {
-      this.orderPayload.body.AtMarket =
-        params.atMarket || defaultOrderParams.atMarket;
+      this.orderPayload.body.AtMarket = defaultOrderParams.atMarket;
+    }
+    if (typeof params.price !== 'undefined') {
+      this.orderPayload.body.Price = params.price;
+      this.orderPayload.body.AtMarket = false;
+    } else {
+      this.orderPayload.body.Price = 0;
+      this.orderPayload.body.AtMarket = true;
     }
 
     this.orderPayload.body.TradedQty = 0;
