@@ -16,6 +16,8 @@ Docs are hosted at https://5paisa.github.io/5paisa-js/
 
 ### Authentication
 
+#### Authenticating with TOTP
+
 Get your API keys from (https://tradestation.5paisa.com/apidoc)
 
 ```js
@@ -26,7 +28,8 @@ const conf = {
   userId: "",
   password: "",
   userKey: "",
-  encryptionKey: ""
+  encryptionKey: "",
+  clientCode: "",
 };
 
 const { FivePaisaClient } = require("5paisajs");
@@ -44,6 +47,89 @@ client
     // Oh no :/
     console.log(err);
   });
+```
+
+#### Authenticating with Access Token
+
+Get your API keys from (https://tradestation.5paisa.com/apidoc)
+
+```js
+// Configuration for your app
+const conf = {
+  appSource: "",
+  appName: "",
+  userId: "",
+  password: "",
+  userKey: "",
+  encryptionKey: "",
+  clientCode: "",
+};
+
+const { FivePaisaClient } = require("5paisajs");
+
+var client = new FivePaisaClient(conf);
+
+// This client object can be used to login multiple users.
+const access_token = "";
+
+client
+.set_access_token(access_token)
+.then((res) => {
+    // Fetch holdings, positions or place orders here.
+    // Some things to try out are given below.
+})
+.catch(err => {
+    // Oh no :/
+    console.log(err);
+  });;
+```
+
+#### Authenticating with Request Token
+
+Get your API keys from (https://tradestation.5paisa.com/apidoc)
+
+#### OAUTH Approach
+First get a token by logging in to -> https://dev-openapi.5paisa.com/WebVendorLogin/VLogin/Index?VendorKey=<Your Vendor Key>&ResponseURL=<Redirect URL>
+
+VendorKey is UesrKey for individuals user
+
+for e.g. you can use ResponseURL as https://www.5paisa.com/technology/developer-apis
+Pass the token received in the response url after successful login to get an access token (this also sets the token for all the APIs you use)-
+Please note that you need to copy the request token from URL and paste in this code and start the code within 30s.
+
+client.get_oauth_session('Your Request Token')
+
+After successful authentication, you should get a Logged in!! message in console
+
+```js
+// Configuration for your app
+const conf = {
+  appSource: "",
+  appName: "",
+  userId: "",
+  password: "",
+  userKey: "",
+  encryptionKey: "",
+  clientCode: "",
+};
+
+const { FivePaisaClient } = require("5paisajs");
+
+var client = new FivePaisaClient(conf);
+
+// This client object can be used to login multiple users.
+const request_token = "";
+
+client
+.get_oauth_session(request_token)
+.then((res) => {
+    // Fetch holdings, positions or place orders here.
+    // Some things to try out are given below.
+})
+.catch(err => {
+    // Oh no :/
+    console.log(err);
+  });;
 ```
 
 ### Fetch Holdings

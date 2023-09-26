@@ -78,7 +78,9 @@ function FivePaisaClient(conf) {
   const IDEAS_REQUEST_CODE = '5PTraderIDEAs';
   const TRADEBOOK_REQUEST_CODE = '5PTrdBkV1';
 
-  let CLIENT_CODE = null;
+  // client code 
+  let CLIENT_CODE = conf.clientCode ? conf.clientCode : null;
+
   // login api payload
   this.loginPayload = loginPayload;
   this.loginPayload.head.appName = conf.appName;
@@ -157,6 +159,7 @@ function FivePaisaClient(conf) {
     withCredentials: true,
   });
   request_instance.defaults.headers.common['Content-Type'] = 'application/json';
+  request_instance.defaults.headers.common['5Paisa-API-Uid'] = 'ka7SFqAU6SC';
 
   /**
    * Handles the response from the login method and returns a promise.
@@ -188,13 +191,10 @@ function FivePaisaClient(conf) {
         request_instance
             .post(ACCESS_TOKEN_ROUTE, accessTokenPayload)
             .then((response) => {
-            // CLIENT_CODE = null ? response.data.body.ClientCode : null;
               if (CLIENT_CODE === null) {
                 CLIENT_CODE = response.data.body.ClientCode;
               }
 
-              // console.log(response, "-+--+-+-+-+");
-              // console.log(CLIENT_CODE, "999");
               if (
                 !response?.data?.body?.AccessToken ||
               response.data.body.AccessToken === null ||
@@ -205,7 +205,7 @@ function FivePaisaClient(conf) {
                 jwttoken = response.data.body.AccessToken;
                 resolve(response.data.body.AccessToken);
               }
-            });
+            }).catch((err) => console.log(err));
       });
 
       return promise;
@@ -214,16 +214,34 @@ function FivePaisaClient(conf) {
     }
   };
 
-  // const get_oauth_session = (requesttoken) => {
-  //   const xy = get_access_token(requesttoken).then((res) => {
-  //     console.log(res);
-  //   }).catch();
-  // };
+  this.set_access_token = function(accessToken){
+    try {
+      const promise = new Promise(function(resolve, reject) {
+        if (accessToken === null || accessToken === '') {
+          console.log("Please pass access token");
+          reject(accessToken);
+        } else {
+          jwttoken = accessToken;
+          resolve(jwttoken);
+        }
+      })
+      return promise;
+    } catch (err) {
+      console.error(err);
+    }
+  }
 
   // generate access token from OAuth
   this.get_oauth_session = function(requesttoken) {
     try {
-      return this.get_access_token(requesttoken);
+      const promise = new Promise((resolve, reject) => {
+        this.get_access_token(requesttoken)
+        .then((res)=>{
+          console.log("Logged in!!");
+          resolve(res);
+        }).catch((err) => reject(err))
+      })
+      return promise;
     } catch (err) {
       console.error(err);
     }
@@ -231,8 +249,10 @@ function FivePaisaClient(conf) {
 
 
   this.get_request_token = function(clientCode, totp, pin) {
-    CLIENT_CODE = clientCode;
-    this.totpPayload.body.Email_ID = clientCode;
+    if(!CLIENT_CODE){
+      CLIENT_CODE = clientCode;
+    }
+    this.totpPayload.body.Email_ID = CLIENT_CODE;
     this.totpPayload.body.TOTP = totp;
     this.totpPayload.body.PIN = pin;
     try {
@@ -297,17 +317,22 @@ function FivePaisaClient(conf) {
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${jwttoken}`,
     };
+
     const promise = new Promise(function(resolve, reject) {
-      request_instance
-          .post(HOLDINGS_ROUTE, payload, {headers: headers})
-          .then((response) => {
-            if (response.data.body.Data.length === 0) {
-              reject(response.data.body.Message);
-            } else {
-              resolve(response.data.body.Data);
-            }
-          });
-    });
+      try {
+        request_instance
+            .post(HOLDINGS_ROUTE, payload, {headers: headers})
+            .then((response) => {
+              if (response.data.body.Data.length === 0) {
+                reject(response.data.body.Message);
+              } else {
+                resolve(response.data.body.Data);
+              }
+            });
+      } catch (err) {
+        console.error(err);
+      }
+      });
 
     return promise;
   };
@@ -715,14 +740,14 @@ function FivePaisaClient(conf) {
    * @param {string} exchange_type - exchange type you want to trade.
    * @param {object} [params] - Parameters for placing complex orders
    */
+  
   this.modifyOrder = function(
       modify_params
   ) {
     this.orderPayload.body.ExchOrderID = modify_params.exchangeOrderID;
     this.orderPayload.body.Qty = modify_params.Qty;
     this.orderPayload.body.Price = modify_params.Price;
- 
-
+    
     this.orderPayload.body.IsIntraday = modify_params.is_intraday;
     this.orderPayload.body.Exchange = modify_params.exchange;
     this.orderPayload.body.ExchangeType = modify_params.exchange_type;
