@@ -39,11 +39,11 @@ var client = new FivePaisaClient(conf);
 // This client object can be used to login multiple users.
 client
   .get_TOTP_Session("Client code", "TOTP", "PIN")
-  .then(response => {
+  .then((response) => {
     // Fetch holdings, positions or place orders here.
     // Some things to try out are given below.
   })
-  .catch(err => {
+  .catch((err) => {
     // Oh no :/
     console.log(err);
   });
@@ -73,15 +73,15 @@ var client = new FivePaisaClient(conf);
 const access_token = "";
 
 client
-.set_access_token(access_token)
-.then((res) => {
+  .set_access_token(access_token)
+  .then((res) => {
     // Fetch holdings, positions or place orders here.
     // Some things to try out are given below.
-})
-.catch(err => {
+  })
+  .catch((err) => {
     // Oh no :/
     console.log(err);
-  });;
+  });
 ```
 
 #### Authenticating with Request Token
@@ -89,6 +89,7 @@ client
 Get your API keys from (https://tradestation.5paisa.com/apidoc)
 
 #### OAUTH Approach
+
 First get a token by logging in to -> https://dev-openapi.5paisa.com/WebVendorLogin/VLogin/Index?VendorKey=<Your Vendor Key>&ResponseURL=<Redirect URL>
 
 VendorKey is UesrKey for individuals user
@@ -121,15 +122,15 @@ var client = new FivePaisaClient(conf);
 const request_token = "";
 
 client
-.get_oauth_session(request_token)
-.then((res) => {
+  .get_oauth_session(request_token)
+  .then((res) => {
     // Fetch holdings, positions or place orders here.
     // Some things to try out are given below.
-})
-.catch(err => {
+  })
+  .catch((err) => {
     // Oh no :/
     console.log(err);
-  });;
+  });
 ```
 
 ### Fetch Holdings
@@ -137,10 +138,10 @@ client
 ```js
 client
   .getHoldings()
-  .then(holdings => {
+  .then((holdings) => {
     console.log(holdings);
   })
-  .catch(err => {
+  .catch((err) => {
     console.log(err);
   });
 
@@ -169,10 +170,10 @@ client
 ```js
 client
   .getPositions()
-  .then(positions => {
+  .then((positions) => {
     console.log(positions);
   })
-  .catch(err => {
+  .catch((err) => {
     console.log(err);
   });
 ```
@@ -189,10 +190,10 @@ var options = {
   isIntraday: false,
   ahPlaced: "N",
   IOCOrder: false,
-  price: 208
+  price: 208,
 };
 try {
-  client.placeOrder("BUY", "1660", "1", "N", options).then(response => {
+  client.placeOrder("BUY", "1660", "1", "N", options).then((response) => {
     console.log(response);
   });
 } catch (err) {
@@ -228,10 +229,10 @@ try {
 var a = {};
 client
   .bocoorder(1660, 1, 205, 0, 217, "B", "N", "C", "P", 200, a)
-  .then(Response => {
+  .then((Response) => {
     console.log(Response);
   })
-  .catch(err => {
+  .catch((err) => {
     console.log(err);
   });
 // Note : For Cover order par Order_for='c'
@@ -241,14 +242,14 @@ client
 
 ```js
 var a = {
-  ExchOrderId: "1100000008193800"
+  ExchOrderId: "1100000008193800",
 };
 client
   .bocoorder(1660, 1, 205, 0, 217, "B", "N", "C", "M", 200, a)
-  .then(Response => {
+  .then((Response) => {
     console.log(Response);
   })
-  .catch(err => {
+  .catch((err) => {
     console.log(err);
   });
 
@@ -259,15 +260,15 @@ client
 
 ```js
 var ab = {
-  price: 215
+  price: 215,
 };
 
 client
   .Mod_bo_order("S", 1660, 1, "N", "1100000008697274", ab)
-  .then(Response => {
+  .then((Response) => {
     console.log(Response);
   })
-  .catch(err => {
+  .catch((err) => {
     console.log(err);
   });
 // Note : This is for modify profit order.
@@ -276,15 +277,15 @@ var ab = {
   isStopLossOrder: true,
   stopLossPrice: 205,
   isIntraday: true,
-  atMarket: true
+  atMarket: true,
 };
 
 client
   .Mod_bo_order("S", 1660, 1, "N", "1100000008697274", ab)
-  .then(Response => {
+  .then((Response) => {
     console.log(Response);
   })
-  .catch(err => {
+  .catch((err) => {
     console.log(err);
   });
 // Note : this is for modify stoploss order.
@@ -300,16 +301,44 @@ a = [
     Symbol: "NIFTY 27 MAY 2021 CE 14500.00",
     Expiry: "20210527",
     StrikePrice: "14500",
-    OptionType: "CE"
-  }
+    OptionType: "CE",
+  },
 ];
 
 client
   .getMarketFeed(a)
-  .then(response => {
+  .then((response) => {
     console.log(response);
   })
-  .catch(err => {
+  .catch((err) => {
+    console.log(err);
+  });
+```
+
+### Fetch market feed by scrip
+
+```js
+a = [
+  {
+    Exch: "N",
+    ExchType: "C",
+    ScripCode: "0",
+    ScripData: "RELIANCE_EQ",
+  },
+  {
+    Exch: "N",
+    ExchType: "D",
+    ScripCode: "40354",
+    ScripData: "",
+  },
+];
+
+client
+  .fetch_market_feed_by_scrip(a)
+  .then((response) => {
+    console.log(response);
+  })
+  .catch((err) => {
     console.log(err);
   });
 ```
@@ -319,14 +348,14 @@ client
 ```js
 a = [
   { Exchange: "N", ExchangeType: "D", ScripCode: "51440" },
-  { Exchange: "N", ExchangeType: "C", ScripCode: "1660" }
+  { Exchange: "N", ExchangeType: "C", ScripCode: "1660" },
 ];
 client
   .getmarketdepth(a)
-  .then(response => {
+  .then((response) => {
     console.log(response);
   })
-  .catch(err => {
+  .catch((err) => {
     console.log(err);
   });
 ```

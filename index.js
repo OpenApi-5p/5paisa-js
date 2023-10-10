@@ -13,6 +13,7 @@ const {
   OrderValidityEnum,
   totpPayload,
   accessTokenPayload,
+  marketscripPayload
 } = require('./const');
 const {AES128Encrypt, AES256Encrypt} = require('./utils');
 
@@ -55,7 +56,8 @@ function FivePaisaClient(conf) {
   const BO_CO_ROUTE = `${BASE_URL}/SMOOrderRequest`;
   const BO_MOD_ROUTE = `${BASE_URL}/ModifySMOOrder`;
   const WEBSOCKET_ROUTE = `https://openfeed.5paisa.com/Feeds/api/UserActivity/LoginCheck`;
-  const Market_ROUTE = `${BASE_URL}/V1//MarketFeed`;
+  const Market_ROUTE = `${BASE_URL}/MarketFeed`;
+  const MARKET_SCRIP_ROUTE = `${BASE_URL}/V1/MarketFeed`;
   const MARKET_DEPTH_ROUTE = `${BASE_URL}/MarketDepth`;
   const IDEAS_ROUTE = `${BASE_URL}/TraderIDEAs`;
   const TOTP_ROUTE = `${BASE_URL}/TOTPLogin`;
@@ -109,6 +111,10 @@ function FivePaisaClient(conf) {
   this.marketpayload.head.key = conf.userKey;
   this.marketpayload.head.userId = conf.userId;
   this.marketpayload.head.password = conf.password;
+  
+  // market scrip payload
+  this.marketscripPayload = marketscripPayload;
+  this.marketscripPayload.head.key = conf.userKey;
 
   // totp payload
   this.totpPayload = totpPayload;
@@ -396,7 +402,6 @@ function FivePaisaClient(conf) {
       request_instance
           .post(MARGIN_ROUTE, payload, {headers: headers})
           .then((response) => {
-          // console.log(response);
             if (response.data.body.EquityMargin.length === 0) {
               reject(response.data.body.Message);
             } else {
@@ -880,19 +885,62 @@ function FivePaisaClient(conf) {
       'Authorization': `Bearer ${jwttoken}`,
     };
 
-    const promise = new Promise(function(resolve, reject) {
+    return new Promise(function(resolve, reject) {
+      try {
       request_instance
           .post(Market_ROUTE, payload, {headers: headers})
-          .then((response) => {
-            if (response.data.body.Data.length === 0) {
-              reject(response.data.body.Message);
-            } else {
+          .then((response) => { 
+            if (response.data.body.Data === null ) {
+              resolve(response.data.body.Message);
+            } 
+            if(response.data.body.Data?.length === 0){
+              resolve(response.data.body.Message);
+            }
+            else {
               resolve(response.data.body.Data);
             }
-          });
+            
+          })
+          .catch((err) => 
+          reject());
+        } catch (err) {
+          console.error(err);
+        }
     });
+  };
 
-    return promise;
+
+  this.fetch_market_feed_by_scrip = function(reqlist) {
+    this.marketscripPayload.body.MarketFeedData = reqlist;
+
+    const payload = this.marketscripPayload;
+    const headers = {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${jwttoken}`,
+    };
+
+    return new Promise(function(resolve, reject) {
+      try {
+      request_instance
+          .post(MARKET_SCRIP_ROUTE, payload, {headers: headers})
+          .then((response) => { 
+            if (response.data.body.Data === null ) {
+              resolve(response.data.body.Message);
+            } 
+            if(response.data.body.Data?.length === 0){
+              resolve(response.data.body.Message);
+            }
+            else {
+              resolve(response.data.body.Data);
+            }
+            
+          })
+          .catch((err) => 
+          reject());
+        } catch (err) {
+          console.error(err);
+        }
+    });
   };
 
   this.historicalData = function(Exch, Exchtype, scrip, timeframe, from, to) {

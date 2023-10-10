@@ -54,7 +54,18 @@ const MARKET_PAYLOAD = {
     Count: '',
     MarketFeedData: [],
     ClientLoginType: 0,
-    LastRequestTime: `/Date(${today})/`,
+    LastRequestTime: `/Date(0)/`,
+    RefreshRate: 'H',
+  },
+};
+
+const MARKET_SCRIP_PAYLOAD = {
+  head: {
+    key: '',
+  },
+  body: {
+    MarketFeedData: [],
+    LastRequestTime: `/Date(0)/`,
     RefreshRate: 'H',
   },
 };
@@ -135,5 +146,6 @@ module.exports = {
   marketpayload: MARKET_PAYLOAD,
   totpPayload: TOTP_PAYLOAD,
   accessTokenPayload: ACCESS_TOKEN_PAYLOAD,
+  marketscripPayload: MARKET_SCRIP_PAYLOAD,
   OrderValidityEnum: OrderValidityEnum,
 };
