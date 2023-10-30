@@ -50,7 +50,11 @@
     "minami": "^1.2.3",
     "npm-run-all": "^4.1.2",
     "prettier-eslint-cli": "^4.4.0",
-    "tough-cookie": "^4.0.0"
+    "tough-cookie": "^4.0.0",
+    "ts-lint": "^4.5.1",
+    "ts-node": "^8.0.2",
+    "tslint": "^5.13.1",
+    "typescript": "^3.4.5"
   },
   "engines": {
     "node": ">=6"
