@@ -1,0 +1,15 @@
+{
+    "compileOnSave": false,
+    "compilerOptions": {
+      "target": "es6",
+      "module": "commonjs",
+      "esModuleInterop": true,
+      "sourceMap": true,
+      "noImplicitAny": false,
+      "moduleResolution": "node",
+      "outDir": "dist",
+      "typeRoots": ["node_modules/@types", "@types"]
+    },
+    "include": ["typings.d.ts", "src/**/*.ts"],
+    "exclude": ["node_modules"]
+}
