@@ -140,6 +140,7 @@ function FivePaisaClient(conf) {
     price: 0,
     scripCode: '',
     scripData: '',
+    RemoteOrderID: '',
   };
   const defaultbocoParams = {
     TrailingSL: 0,
@@ -505,6 +506,7 @@ function FivePaisaClient(conf) {
    * @property {boolean} [isIntraday=false] - true - For intraday order, false - for delivery order.
    * @property {boolean} [ahPlaced=N] - "Y -in case order placed after market closed. N-Normal Market time Order
    * @property {boolean} [DisQty] - Quantity exposed in the exchange. Disclosed quantity is never larger than order quantity.
+   * @property {string} [RemoteOrderID] - RemoteOrderID to fetch order status.
    * @property {boolean} [IOCOrder=false] - true - For IOC order, false - For regular order.
    * @property {OrderValidityEnum} [iOrderValidity] - true - Order validity.
    *
@@ -586,6 +588,7 @@ function FivePaisaClient(conf) {
     this.orderPayload.body.IsAHOrder =
       params.ahPlaced || defaultOrderParams.ahPlaced;
     this.orderPayload.body.DisQty = params.DisQty || qty;
+    this.orderPayload.body.RemoteOrderID = params.RemoteOrderID || defaultOrderParams.RemoteOrderID;
 
     return this._order_request('P');
   };
