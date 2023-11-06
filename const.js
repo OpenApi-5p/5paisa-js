@@ -119,6 +119,7 @@ const ORDER_PLACEMENT_PAYLOAD = {
     StopLossPrice: 0,
     IsIOCOrder: false,
     IsIntraday: false,
+    RemoteOrderID: '',
     IsAHOrder: 'N',
     ValidTillDate: `/Date(${followingDay})/`,
     AppSource: 0,
