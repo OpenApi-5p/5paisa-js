@@ -122,6 +122,7 @@ const ORDER_PLACEMENT_PAYLOAD = {
     IsAHOrder: 'N',
     ValidTillDate: `/Date(${followingDay})/`,
     AppSource: 0,
+    RemoteOrderID: '',
   },
 };
 

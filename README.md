@@ -343,6 +343,29 @@ client
   });
 ```
 
+### OrderStatus
+
+```js
+orderList = [
+  {
+    Exch: "N",
+    RemoteOrderID: "1000000002817035",
+  },
+  {
+    Exch: "N",
+    RemoteOrderID: "23060806720092",
+  },
+];
+client
+  .getOrderStatus(orderList)
+  .then((response) => {
+    console.log(response);
+  })
+  .catch((err) => {
+    console.log(err);
+  });
+```
+
 ### MarketDepth
 
 ```js
